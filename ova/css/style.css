@@ -1,7 +1,13 @@
 *{box-sizing:border-box;margin:0;padding:0}
-body{font-family:'Segoe UI',Arial,sans-serif;background:#f0f4ff;color:#2d3748;min-height:100vh}
-header{background:linear-gradient(135deg,#4361ee,#7209b7);color:#fff;padding:40px 20px;text-align:center;box-shadow:0 4px 12px rgba(0,0,0,.15)}
-header h1{font-size:2em;margin-bottom:12px}
+body{font-family:'Segoe UI',Arial,sans-serif;background:#f0f4ff;color:#2d3748;min-height:100vh;display:flex}
+header{}
+.sidebar{width:230px;background:#1a1a2e;color:#fff;padding:25px 0;position:fixed;top:0;left:0;bottom:0;overflow-y:auto}
+.sidebar h2{color:#fff;font-size:1.1em;padding:0 20px 15px;border-bottom:1px solid #333;margin-bottom:10px}
+.sidebar a{display:block;color:#ccc;text-decoration:none;padding:12px 20px;transition:.2s}
+.sidebar a:hover,.sidebar a.active{background:#4361ee;color:#fff}
+.main{margin-left:230px;flex:1}
+header{background:linear-gradient(135deg,#4361ee,#7209b7);color:#fff;padding:30px 20px;box-shadow:0 4px 12px rgba(0,0,0,.15)}
+header h1{font-size:1.8em}
 nav a{color:#fff;margin:0 12px;text-decoration:none;font-weight:600;padding:6px 12px;border-radius:20px;transition:.3s}
 nav a:hover{background:rgba(255,255,255,.2)}
 main{max-width:850px;margin:30px auto;background:#fff;padding:35px;border-radius:16px;box-shadow:0 4px 16px rgba(0,0,0,.08)}
