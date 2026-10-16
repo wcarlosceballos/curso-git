@@ -2,7 +2,7 @@
 const KEY = 'sdia_progress';
 function getProgress(){ try{ return JSON.parse(localStorage.getItem(KEY)) || {} }catch{ return {} } }
 function saveProgress(d){ localStorage.setItem(KEY, JSON.stringify(d)); }
-function logDiagnostico(score, falencias){ const p=getProgress(); p.diagnostico={score, falencias}; saveProgress(p); }
+function logDiagnostico(score, nivel){ const p=getProgress(); p.diagnostico={score, nivel}; saveProgress(p); }
 function markLessonRead(id){ const p=getProgress(); p.lecciones=p.lecciones||{}; p.lecciones[id]=true; saveProgress(p); }
 function logLessonTime(id, seg){ const p=getProgress(); p.tiempos=p.tiempos||{}; p.tiempos[id]=(p.tiempos[id]||0)+seg; saveProgress(p); }
 function setModuleDone(m){ const p=getProgress(); p['modulo'+m]=true; saveProgress(p); }

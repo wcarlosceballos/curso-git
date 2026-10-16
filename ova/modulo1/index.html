@@ -1,12 +1,130 @@
-<!DOCTYPE html><html lang="es"><head><meta charset="UTF-8"><title>📗 Módulo 1 — Git Básico</title><link rel="stylesheet" href="../css/style.css"></head>
-<body><aside class="sidebar"><h2>📘 Git</h2><a href="../index.html">🏠 Inicio</a><a href="../diagnostico.html">🩺 Diagnóstico</a><a href="../modulo1/index.html">📘 Módulo 1</a><a href="../modulo2/index.html">📗 Módulo 2</a><a href="../modulo3/index.html">📘 Módulo 3</a></aside>
-<div class="main"><header><h1>📗 Módulo 1 — Git Básico</h1></header><main>
-<h2>🎯 Competencia</h2><p>Saber los conceptos y comandos básicos de Git</p>
-<div class="card"><h3>🎬 Actividad rápida</h3><p>Elige el comando que guardar un cambio en el historial:</p><button onclick="a(this)">git add</button><button data-ok="1" onclick="a(this)">git commit</button><button onclick="a(this)">git push</button><p id="f"></p></div>
-<a class="btn" href="reto.html">🏆 Ir al reto</a>
-<button class="btn" onclick="setModuleDone(1); alert('Módulo 1 completado');">✅ Marcar completado</button>
+<!DOCTYPE html><html lang="es"><head><meta charset="UTF-8"><title>📘 Módulo 1 — Git Básico</title><link rel="stylesheet" href="../css/style.css"></head>
+<body><aside class="sidebar"><h2>📘 Git desde Cero</h2>
+<a href="../index.html">🏠 Inicio</a>
+<a href="../diagnostico.html">🩺 Diagnóstico</a>
+<a href="../leccion1.html">📗 Lección 1</a>
+<a href="../leccion2.html">📗 Lección 2</a>
+<a href="../leccion3.html">📗 Lección 3</a>
+<a href="index.html">📘 Módulo 1</a>
+<a href="../modulo2/index.html">📗 Módulo 2</a>
+<a href="../modulo3/index.html">📘 Módulo 3</a>
+<a href="../evaluacion.html">📝 Evaluación</a>
+<a href="../portafolio.html">📂 Portafolio</a>
+<a href="../resultados.html">🏆 Resultados</a>
+</aside>
+<div class="main"><header><h1>📘 Módulo 1 — Git Básico</h1></header><main>
+
+<h2>🎯 Competencia</h2>
+<p>Crear y administrar un repositorio local, registrando cambios de forma controlada.</p>
+
+<div class="card"><h3>📖 Antes de empezar</h3>
+<p>Este módulo tiene una sola lección, pero es la base de todo lo demás. Léela primero:</p>
+<a class="btn" href="../leccion1.html">📗 Abrir Lección 1 — Git Básico</a></div>
+
+<h2>🧠 Actividad 1 — Identifica el área</h2>
+<p>Antes de empezar a teclear, tienes que saber <b>dónde estás parado</b>. ¿En qué área de Git se encuentra cada acción?</p>
+<div class="card quiz">
+<p><b>1.</b> Ejecutas <code>git add app.js</code> → ¿en qué área queda el archivo?</p>
+<button onclick="r1(this,0)">Working directory</button>
+<button data-ok="1" onclick="r1(this,1)">Staging area</button>
+<button onclick="r1(this,0)">Repository</button>
+<p id="r1f"></p>
+
+<p><b>2.</b> Ejecutas <code>git commit -m "msg"</code> → ¿en qué área queda?</p>
+<button onclick="r2(this,0)">Staging area</button>
+<button data-ok="1" onclick="r2(this,1)">Repository</button>
+<button onclick="r2(this,0)">Working directory</button>
+<p id="r2f"></p>
+</div>
+
+<h2>🧠 Actividad 2 — Elige el comando correcto</h2>
+<div class="card quiz">
+<p><b>3.</b> ¿Qué comando preparas <b>todos</b> los archivos modificados de una vez?</p>
+<button data-ok="1" onclick="r3(this,1)"><code>git add .</code></button>
+<button onclick="r3(this,0)"><code>git commit .</code></button>
+<button onclick="r3(this,0)"><code>git save</code></button>
+<p id="r3f"></p>
+
+<p><b>4.</b> ¿Cuál comando ves <b>sin preparar nada</b> todavía?</p>
+<button onclick="r4(this,0)"><code>git commit</code></button>
+<button data-ok="1" onclick="r4(this,1)"><code>git diff</code></button>
+<button onclick="r4(this,0)"><code>git push</code></button>
+<p id="r4f"></p>
+</div>
+<p id="puntaje" style="font-weight:bold;font-size:1.1em"></p>
+
+<h2>🛡️ Actividad 3 — Antes del primer push</h2>
+<div class="card">
+<p>Este es el error que más damage causa y que <b>todos</b> cometen alguna vez. Marca los archivos que <b>nunca</b> deben subirse.</p>
+<div class="quiz">
+<button data-ok="1" onclick="marca(this)">.env con contraseñas</button>
+<button data-ok="1" onclick="marca(this)">id_rsa (clave privada)</button>
+<button onclick="marca(this)">README.md</button>
+<button onclick="marca(this)">LICENSE</button>
+<button data-ok="1" onclick="marca(this)">node_modules/</button>
+<button onclick="marca(this)">index.html</button>
+<button data-ok="1" onclick="marca(this)">*.key</button>
+</div>
+<p id="seguridad"></p>
+</div>
+
+<h2>✍️ Actividad 4 — Tu mensaje de commit</h2>
+<div class="card">
+<p>Un commit mal escrito es una bomba de relojería. Escribe el mensaje de un commit <b>real</b> tuyo y comprueba si es bueno.</p>
+<label><b>Tu mensaje de commit:</b><br>
+<input id="mensaje" type="text" style="width:100%;padding:10px;border:1px solid #e2e8f0;border-radius:8px" placeholder="fix: corregir el cálculo del subtotal"></label><br><br>
+<button class="btn" onclick="evaluarMensaje()">Evaluar mensaje</button>
+<p id="fbmsg"></p>
+</div>
+
+<a class="btn" href="reto.html">🏆 Ir al reto del módulo</a>
+<button class="btn" onclick="completar(this)">✅ Marcar módulo completado</button>
+
 </main><footer>OVA educativo — Carlos Ceballos · 2026</footer></div>
 <script src="../js/storage.js"></script>
+<script src="../js/progress.js"></script>
 <script>
-function a(b){document.getElementById('f').textContent=b.hasAttribute('data-ok')?'✅ Correcto':'❌ Prueba otra vez'; if(b.hasAttribute('data-ok')) b.dataset.done='1';}
-</script></body></html>
+function responder(id,c){
+  var el=document.getElementById(id);
+  el.textContent=c?'✅ Correcto':'❌ No es esa — revisa la lección';
+  el.style.color=c?'#22c55e':'#ef4444';
+  recalcular();
+}
+function r1(b,c){responder('r1f',c===1)} function r2(b,c){responder('r2f',c===1)}
+function r3(b,c){responder('r3f',c===1)} function r4(b,c){responder('r4f',c===1)}
+function correcta(id){var e=document.getElementById(id);return e.textContent.indexOf('Correcto')>-1}
+function recalcular(){
+  var n=0;['r1f','r2f','r3f','r4f'].forEach(function(id){if(correcta(id))n++});
+  var et=['❌ 0 de 4','⚠️ 1 de 4','⚠️ 2 de 4','⚠️ 3 de 4','✅ 4 de 4 — perfecto'];
+  document.getElementById('puntaje').textContent=et[n];
+  return n;
+}
+var marcas={};
+function marca(b){
+  if(b.dataset.done){ return; }
+  var ok=b.hasAttribute('data-ok');
+  b.dataset.done='1'; marcas[b.textContent]=ok;
+  b.style.background = ok ? '#dcfce7' : '#fee2e2';
+  b.style.borderColor = ok ? '#22c55e' : '#ef4444';
+  var fallos=Object.keys(marcas).filter(function(k){return !marcas[k]}).length;
+  document.getElementById('seguridad').textContent = fallos===0
+    ? '✅ Perfecto: identificaste los 3 archivos que nunca deben subirse.'
+    : '❌ '+fallos+' marcado(s) incorrecto(s). Recuerda: el .gitignore va ANTES del primer push.';
+}
+function evaluarMensaje(){
+  var v=document.getElementById('mensaje').value.trim(), fb=document.getElementById('fbmsg');
+  if(v.length<10){ fb.innerHTML='⚠️ Escribe un mensaje real.'; return; }
+  var bajo=/^(arreglado|fix|update|cambios|commit|hola|prueba|test)$/i.test(v);
+  var tipo=/^(feat|fix|docs|refactor|test|chore|style|perf):/.test(v);
+  var fb2;
+  if(bajo) fb2='❌ <b>Demasiado vago.</b> «'+v+'» no dice nada. ¿Qué cambiaste y por qué? Prueba: <code>fix: corregir el cálculo del subtotal</code>';
+  else if(tipo) fb2='✅ <b>Excelente.</b> Usa el formato convencional <code>tipo: descripción</code>. Se lee bien en el historial.';
+  else fb2='⚠️ Aceptable, pero mejoraría. Un mensaje ideal dice <b>qué</b> cambiaste y <b>por qué</b>. Prueba: <code>fix: corregir el cálculo del subtotal</code>';
+  fb.innerHTML=fb2;
+}
+function completar(btn){
+  setModuleDone(1);
+  btn.textContent='✅ Módulo 1 completado'; btn.disabled=true;
+}
+</script>
+</body></html>

@@ -1,12 +1,127 @@
-<!DOCTYPE html><html lang="es"><head><meta charset="UTF-8"><title>📘 Módulo 3 — GitHub y la nube</title><link rel="stylesheet" href="../css/style.css"></head>
-<body><aside class="sidebar"><h2>📘 Git</h2><a href="../index.html">🏠 Inicio</a><a href="../diagnostico.html">🩺 Diagnóstico</a><a href="../modulo1/index.html">📘 Módulo 1</a><a href="../modulo2/index.html">📗 Módulo 2</a><a href="../modulo3/index.html">📘 Módulo 3</a></aside>
-<div class="main"><header><h1>📘 Módulo 3 — GitHub y la nube</h1></header><main>
-<h2>🎯 Competencia</h2><p>Publicar proyectos en GitHub</p>
-<div class="card"><h3>🎬 Actividad rápida</h3><p>¿Qué comando sube commits al remoto?</p><button onclick="a(this)">git pull</button><button data-ok="1" onclick="a(this)">git push</button><button onclick="a(this)">git init</button><p id="f"></p></div>
-<a class="btn" href="reto.html">🏆 Ir al reto</a>
-<button class="btn" onclick="setModuleDone(3); alert('Módulo 3 completado');">✅ Marcar completado</button>
+<!DOCTYPE html><html lang="es"><head><meta charset="UTF-8"><title>📘 Módulo 3 — GitHub</title><link rel="stylesheet" href="../css/style.css"></head>
+<body><aside class="sidebar"><h2>📘 Git desde Cero</h2>
+<a href="../index.html">🏠 Inicio</a>
+<a href="../diagnostico.html">🩺 Diagnóstico</a>
+<a href="../leccion1.html">📗 Lección 1</a>
+<a href="../leccion2.html">📗 Lección 2</a>
+<a href="../leccion3.html">📗 Lección 3</a>
+<a href="../modulo1/index.html">📘 Módulo 1</a>
+<a href="../modulo2/index.html">📗 Módulo 2</a>
+<a href="index.html">📘 Módulo 3</a>
+<a href="../evaluacion.html">📝 Evaluación</a>
+<a href="../portafolio.html">📂 Portafolio</a>
+<a href="../resultados.html">🏆 Resultados</a>
+</aside>
+<div class="main"><header><h1>📘 Módulo 3 — GitHub y Remotos</h1></header><main>
+
+<h2>🎯 Competencia</h2>
+<p>Conectar tu repositorio local con GitHub, publicar con seguridad y colaborar mediante Pull Requests.</p>
+
+<div class="card"><h3>📖 Antes de empezar</h3>
+<p>Este módulo cierra el curso y te saca al mundo real:</p>
+<a class="btn" href="../leccion3.html">📗 Abrir Lección 3 — GitHub</a></div>
+
+<h2>🧠 Actividad 1 — Push vs Pull vs Fetch</h2>
+<div class="card quiz">
+<p><b>1.</b> Acabas de terminar un commit. ¿Qué comando lo sube a GitHub?</p>
+<button data-ok="1" onclick="r1(this,1)"><code>git push</code></button>
+<button onclick="r1(this,0)"><code>git pull</code></button>
+<button onclick="r1(this,0)"><code>git fetch</code></button>
+<p id="r1f"></p>
+
+<p><b>2.</b> Quieres <b>saber</b> qué cambió en el remoto <b>sin arriesgar</b> tu trabajo local. ¿Cuál?</p>
+<button onclick="r2(this,0)"><code>git pull</code></button>
+<button data-ok="1" onclick="r2(this,1)"><code>git fetch</code></button>
+<button onclick="r2(this,0)"><code>git merge</code></button>
+<p id="r2f"></p>
+</div>
+
+<h2>🧠 Actividad 2 — La contraseña que ya no existe</h2>
+<div class="card">
+<p>Git pide tu contraseña al hacer <code>push</code> por HTTPS y <b>te rechaza</b>. ¿Por qué?</p>
+<div class="quiz">
+<button data-ok="1" onclick="sel(this)">Porque GitHub ya no acepta contraseñas — debes usar un token (PAT)</button>
+<button onclick="sel(this)">Porque escribiste mal el usuario</button>
+<button onclick="sel(this)">Porque tu cuenta está suspendida</button>
+<button onclick="sel(this)">Porque el repositorio es privado</button>
+</div>
+<p id="auth"></p>
+</div>
+
+<h2>🧠 Actividad 3 — No tengo permisos</h2>
+<div class="card quiz">
+<p><b>3.</b> Quieres contribuir a un proyecto de otra persona. ¿Cuál es el flujo correcto?</p>
+<button onclick="r3(this,0)">Clone → editar → push</button>
+<button data-ok="1" onclick="r3(this,1)">Fork → clone → push a tu fork → Pull Request</button>
+<button onclick="r3(this,0)">Esperar a que te den acceso</button>
+<p id="r3f"></p>
+
+<p><b>4.</b> ¿Para qué sirve el <code>-u</code> de <code>git push -u origin main</code>?</p>
+<button onclick="r4(this,0)">Para subir archivos sin commitear</button>
+<button data-ok="1" onclick="r4(this,1)">Para vincular la rama con el remoto y poder omitir los argumentos</button>
+<button onclick="r4(this,0)">Para forzar la subida</button>
+<p id="r4f"></p>
+</div>
+<p id="puntaje" style="font-weight:bold;font-size:1.1em"></p>
+
+<h2>✍️ Actividad 4 — Publica tu proyecto</h2>
+<div class="card">
+<p>Ahora te toca a ti. Escribe la URL de un repositorio que hayas publicado en GitHub (puede ser este mismo curso).</p>
+<label><b>URL de tu repositorio:</b><br>
+<input id="url" type="text" style="width:100%;padding:10px;border:1px solid #e2e8f0;border-radius:8px" placeholder="https://github.com/TU_USUARIO/mi-proyecto"></label><br><br>
+<button class="btn" onclick="evaluarUrl()">Verificar URL</button>
+<p id="fburl"></p>
+</div>
+
+<div class="card"><h3>🏅 ¿Listo para publicar tu primer sitio?</h3>
+<p>Con lo que aprendiste hoy puedes levantar un sitio estático gratis usando la rama <code>gh-pages</code>:</p>
+<pre style="text-align:left">git switch -c gh-pages
+cp -r contenido/* .
+git add . &amp;&amp; git commit -m "docs: publicar sitio"
+git push -u origin gh-pages</pre>
+<p>Luego actívalo en <b>Settings → Pages → Source: <code>gh-pages</code></b>. Tardará entre 1 y 10 minutos.</p>
+</div>
+
+<a class="btn" href="reto.html">🏆 Ir al reto del módulo</a>
+<button class="btn" onclick="completar(this)">✅ Marcar módulo completado</button>
+
 </main><footer>OVA educativo — Carlos Ceballos · 2026</footer></div>
 <script src="../js/storage.js"></script>
+<script src="../js/progress.js"></script>
 <script>
-function a(b){document.getElementById('f').textContent=b.hasAttribute('data-ok')?'✅ Correcto':'❌ Prueba otra vez'; if(b.hasAttribute('data-ok')) b.dataset.done='1';}
-</script></body></html>
+function responder(id,c){
+  var el=document.getElementById(id);
+  el.textContent=c?'✅ Correcto':'❌ No es esa — revisa la lección';
+  el.style.color=c?'#22c55e':'#ef4444';
+  recalcular();
+}
+function r1(b,c){responder('r1f',c===1)} function r2(b,c){responder('r2f',c===1)}
+function r3(b,c){responder('r3f',c===1)} function r4(b,c){responder('r4f',c===1)}
+function correcta(id){var e=document.getElementById(id);return e.textContent.indexOf('Correcto')>-1}
+function recalcular(){
+  var n=0;['r1f','r2f','r3f','r4f'].forEach(function(id){if(correcta(id))n++});
+  var et=['❌ 0 de 4','⚠️ 1 de 4','⚠️ 2 de 4','⚠️ 3 de 4','✅ 4 de 4 — perfecto'];
+  document.getElementById('puntaje').textContent=et[n];
+  return n;
+}
+function sel(b){
+  var ok=b.hasAttribute('data-ok');
+  document.getElementById('auth').innerHTML = ok
+    ? '✅ Exacto. Desde 2021 GitHub usa <b>tokens personales (PAT)</b>. Se pega en el campo <b>contraseña</b> y se genera en <i>Settings → Developer settings → Personal access tokens</i> con permiso <code>repo</code>.'
+    : '❌ No es la causa. La causa real: <b>GitHub ya no acepta contraseñas</b>, necesitas un token personal (PAT) en el campo contraseña.';
+  b.style.background=ok?'#dcfce7':'#fee2e2';
+}
+function evaluarUrl(){
+  var v=document.getElementById('url').value.trim(), fb=document.getElementById('fburl');
+  if(v.indexOf('https://github.com/')<0){ fb.innerHTML='⚠️ Debe empezar por <code>https://github.com/</code>'; return; }
+  var partes=v.replace('https://github.com/','').split('/');
+  if(partes.length<2||!partes[0]||!partes[1]){ fb.innerHTML='⚠️ La URL debe incluir usuario <b>y</b> repositorio.'; return; }
+  savePortfolio('mod3_url_publicado', v);
+  fb.innerHTML='✅ URL válida: <b>'+partes[0]+'/'+partes[1]+'</b>. Guardada en tu portafolio.';
+}
+function completar(btn){
+  setModuleDone(3);
+  btn.textContent='✅ Módulo 3 completado'; btn.disabled=true;
+}
+</script>
+</body></html>

@@ -1,0 +1,108 @@
+<!DOCTYPE html><html lang="es"><head><meta charset="UTF-8"><title>📂 Mi portafolio</title><link rel="stylesheet" href="css/style.css"></head>
+<body><aside class="sidebar"><h2>📘 Git desde Cero</h2>
+<a href="index.html">🏠 Inicio</a>
+<a href="diagnostico.html">🩺 Diagnóstico</a>
+<a href="leccion1.html">📗 Lección 1</a>
+<a href="leccion2.html">📗 Lección 2</a>
+<a href="leccion3.html">📗 Lección 3</a>
+<a href="modulo1/index.html">📘 Módulo 1</a>
+<a href="modulo2/index.html">📗 Módulo 2</a>
+<a href="modulo3/index.html">📘 Módulo 3</a>
+<a href="evaluacion.html">📝 Evaluación</a>
+<a href="portafolio.html">📂 Portafolio</a>
+<a href="resultados.html">🏆 Resultados</a>
+</aside>
+<div class="main"><header><h1>📂 Mi portafolio de evidencias</h1></header><main>
+
+<p>Aquí se guardan automáticamente tus evidencias. Al terminar, descárgalas como evidencia de tu curso.</p>
+
+<div class="card" id="evidencias"></div>
+<div class="card" id="evaluacion"></div>
+
+<button class="btn" onclick="descargar()">⬇️ Descargar portafolio (.md)</button>
+<button class="btn" onclick="descargarJSON()">⬇️ Descargar datos crudos (.json)</button>
+<button class="btn" onclick="imprimir()">🖨️ Imprimir</button>
+
+</main><footer>OVA educativo — Carlos Ceballos · 2026</footer></div>
+<script src="js/storage.js"></script>
+<script src="js/progress.js"></script>
+<script>
+const ETIQUETAS = {
+  reto1_evidencia: '📋 Salida de git log (Módulo 1)',
+  reto1_gitignore: '🛡️ Tu .gitignore (Módulo 1)',
+  reto2_conflicto: '⚔️ Bloque del conflicto (Módulo 2)',
+  reto2_resolucion: '💡 Cómo lo resolviste (Módulo 2)',
+  reto3_url: '🔗 URL de tu repositorio (Módulo 3)',
+  reto3_remoto: '📡 Salida de git remote -v (Módulo 3)',
+  reto3_log: '📋 Salida de git log (Módulo 3)',
+  mod3_url_publicado: '🚀 URL publicada en la actividad'
+};
+
+function escapar(s){
+  return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+}
+
+function render(){
+  const p = getProgress();
+  const port = p.portafolio || {};
+  const claves = Object.keys(ETIQUETAS).filter(k => port[k]);
+
+  let html = '<h3>📚 Evidencias guardadas</h3>';
+  if(!claves.length){
+    html += '<p>⬜ Aún no hay evidencias. Completa los <a href="modulo1/index.html">módulos</a> y sus <a href="modulo1/reto.html">retos</a>.</p>';
+  } else {
+    html += '<p>'+claves.length+' de '+Object.keys(ETIQUETAS).length+' evidencias registradas.</p>';
+    claves.forEach(k=>{
+      html += '<details><summary>'+ETIQUETAS[k]+'</summary><pre style="text-align:left">'+escapar(port[k])+'</pre></details>';
+    });
+    const faltan = Object.keys(ETIQUETAS).filter(k=>!port[k]);
+    if(faltan.length) html += '<p><b>Pendientes:</b> '+faltan.map(k=>ETIQUETAS[k]).join(' · ')+'</p>';
+  }
+  document.getElementById('evidencias').innerHTML = html;
+
+  let ev = '<h3>📊 Resultados</h3>';
+  ev += p.diagnostico
+    ? '<p>✅ Diagnóstico: <b>'+p.diagnostico.score+'/8</b> — nivel <b>'+(p.diagnostico.nivel||'—')+'</b></p>'
+    : '<p>⬜ Diagnóstico — pendiente</p>';
+  [1,2,3].forEach(m=>{
+    ev += p['modulo'+m]
+      ? '<p>✅ Módulo '+m+' completado'+(p['score'+m]!==undefined?' — quiz: <b>'+p['score'+m]+'/100</b>':'')+'</p>'
+      : '<p>⬜ Módulo '+m+' — pendiente</p>';
+  });
+  if(p.final) ev += '<p>✅ Evaluación final: <b>'+p.final.percent+'%</b> ('+p.final.score+' respuestas correctas)</p>';
+  const lec = p.lecciones||{};
+  ['leccion1','leccion2','leccion3'].forEach((l,i)=>{
+    ev += lec[l] ? '<p>✅ Lección '+(i+1)+' leída</p>' : '<p>⬜ Lección '+(i+1)+' — pendiente</p>';
+  });
+  document.getElementById('evaluacion').innerHTML = ev;
+}
+
+function descargar(){
+  const p = getProgress(), port = p.portafolio || {};
+  let t = '# Portafolio de evidencias — Curso Git desde Cero\n\n';
+  t += '**Alumno:** Carlos Ceballos  \n**Fecha:** '+new Date().toLocaleDateString('es')+'\n\n';
+  t += '## Progreso\n';
+  t += '- Diagnóstico: '+(p.diagnostico? p.diagnostico.score+' pts':'pendiente')+'\n';
+  [1,2,3].forEach(m=>{ t += '- Módulo '+m+': '+(p['modulo'+m]?'completado':'pendiente')+(p['score'+m]!==undefined?' (quiz '+p['score'+m]+'/100)':'')+'\n'; });
+  ['leccion1','leccion2','leccion3'].forEach((l,i)=>{ t += '- Lección '+(i+1)+': '+((p.lecciones||{})[l]?'leída':'pendiente')+'\n'; });
+  if(p.final) t += '- Evaluación final: '+p.final.percent+'%\n';
+  t += '\n## Evidencias\n';
+  Object.keys(ETIQUETAS).filter(k=>port[k]).forEach(k=>{
+    t += '\n### '+ETIQUETAS[k]+'\n\n```\n'+port[k]+'\n```\n';
+  });
+  const a=document.createElement('a');
+  a.href='data:text/markdown;charset=utf-8,'+encodeURIComponent(t);
+  a.download='portafolio-git.md'; a.click();
+}
+
+function descargarJSON(){
+  const a=document.createElement('a');
+  a.href='data:application/json;charset=utf-8,'+encodeURIComponent(exportJSON());
+  a.download='progreso-git.json'; a.click();
+}
+
+function imprimir(){ window.print(); }
+
+render();
+</script>
+</body></html>

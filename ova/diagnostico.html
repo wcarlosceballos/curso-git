@@ -1,12 +1,18 @@
 <!DOCTYPE html><html lang="es"><head><meta charset="UTF-8"><title>🩺 Diagnóstico</title>
 <link rel="stylesheet" href="css/style.css"></head>
 <body><aside class="sidebar">
-<h2>📘 Git</h2>
+<h2>📘 Git desde Cero</h2>
 <a href="index.html">🏠 Inicio</a>
 <a href="diagnostico.html">🩺 Diagnóstico</a>
+<a href="leccion1.html">📗 Lección 1</a>
+<a href="leccion2.html">📗 Lección 2</a>
+<a href="leccion3.html">📗 Lección 3</a>
 <a href="modulo1/index.html">📘 Módulo 1</a>
 <a href="modulo2/index.html">📗 Módulo 2</a>
 <a href="modulo3/index.html">📘 Módulo 3</a>
+<a href="evaluacion.html">📝 Evaluación</a>
+<a href="portafolio.html">📂 Portafolio</a>
+<a href="resultados.html">🏆 Resultados</a>
 </aside>
 <div class="main"><header><h1>🩺 Evaluación diagnóstica</h1></header>
 <main>
@@ -17,6 +23,7 @@
 </main>
 <footer>OVA educativo — Carlos Ceballos · 2026</footer></div>
 <script src="js/storage.js"></script>
+<script src="js/progress.js"></script>
 <script>
 const preguntas = [
  {p:'1. ¿Qué hace git init?', o:['Crea una rama','Inicializa un repositorio','Sube cambios a GitHub'], c:1},
@@ -40,9 +47,9 @@ function render(){
 function enviar(){
   let pts=0;
   preguntas.forEach((q,i)=>{ if(sel[i]===q.c) pts++; });
-  let nivel = pts<=2 ? 'Explorador' : pts<=4 ? 'Practicante' : pts<=6 ? 'Desarrollador asistido' : 'Arquitecto de IA';
-  const p = getProgress(); p.diagnostico = nivel; p.puntosDiagnostico = pts; saveProgress(p);
-  document.getElementById('resultado').innerHTML = `<h3>🎉 Tu punto de partida</h3><p>Nivel: <b>${nivel}</b> (${pts}/8)</p><p>Recomendación: comienza con el Módulo 1 y avanza por la ruta.</p><a class="btn" href="modulo1/index.html">Ir al Módulo 1</a>`;
+  let nivel = pts<=2 ? 'Explorador' : pts<=4 ? 'Practicante' : pts<=6 ? 'Desarrollador' : 'Experto en Git';
+  logDiagnostico(pts, nivel);
+  document.getElementById('resultado').innerHTML = `<h3>🎉 Tu punto de partida</h3><p>Nivel: <b>${nivel}</b> (${pts}/8)</p><p>Recomendación: comienza por la <b>Lección 1</b> y sigue la ruta completa.</p><a class="btn" href="leccion1.html">📗 Ir a la Lección 1</a>`;
 }
 render();
 </script>

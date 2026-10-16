@@ -1,27 +1,155 @@
-<!DOCTYPE html><html lang="es"><head><meta charset="UTF-8"><title>Lección 3</title><link rel="stylesheet" href="css/style.css"></head>
-<body><aside class="sidebar">
-<h2>📘 Git desde Cero</h2>
+<!DOCTYPE html><html lang="es"><head><meta charset="UTF-8"><title>Lección 3 — GitHub</title><link rel="stylesheet" href="css/style.css"></head>
+<body><aside class="sidebar"><h2>📘 Git desde Cero</h2>
 <a href="index.html">🏠 Inicio</a>
+<a href="diagnostico.html">🩺 Diagnóstico</a>
 <a href="leccion1.html">📗 Lección 1</a>
 <a href="leccion2.html">📗 Lección 2</a>
 <a href="leccion3.html">📗 Lección 3</a>
+<a href="modulo1/index.html">📘 Módulo 1</a>
+<a href="modulo2/index.html">📗 Módulo 2</a>
+<a href="modulo3/index.html">📘 Módulo 3</a>
 <a href="evaluacion.html">📝 Evaluación</a>
+<a href="portafolio.html">📂 Portafolio</a>
+<a href="resultados.html">🏆 Resultados</a>
 </aside>
 <div class="main">
-<header><h1>📗 Lección 3 — GitHub y Remotos</h1></header>
+<header><h1>📗 Lección 3 — GitHub, Remotos y Trabajo en Equipo</h1></header>
 <main>
-<h2>Conectar con GitHub</h2>
-<pre>git remote add origin https://github.com/TU_USUARIO/REPO.git
+
+<div class="card"><h2>📌 Idea central</h2>
+<p>Git es local. GitHub es el servidor donde tu repositorio <b>se comparte</b>. Publicar es un acto deliberado: primero decides qué entra, después decides a dónde va. Lo que no preparaste, lo acabas subiendo.</p></div>
+
+<h2>1. Remoto</h2>
+<p>Un <b>remoto</b> es un alias que apunta a la URL de tu repositorio en GitHub. Por defecto se llama <code>origin</code>.</p>
+<pre>git remote add origin https://github.com/TU_USUARIO/mi-proyecto.git
+git remote -v                 # ver todos los remotos
+
+# útil para trabajar con un proyecto abierto:
+git remote add upstream https://github.com/OTRO/USUARIO/REPO.git</pre>
+
+<h2>2. Los dos comandos que más importan</h2>
+<table><tr><th>Comando</th><th>Dirección</th><th>¿Se pierde trabajo local?</th></tr>
+<tr><td><code>git push</code></td><td>local → remoto</td><td>No</td></tr>
+<tr><td><code>git pull</code></td><td>remoto → local</td><td><b>Sí, si hay conflicto</b></td></tr>
+<tr><td><code>git fetch</code></td><td>remoto → local</td><td>No — solo descarga, no integra</td></tr>
+</table>
+<div class="card"><p><b>⚠️ Principio de seguridad:</b> <code>git pull</code> = <code>git fetch</code> + <code>git merge</code>. Si solo quieres <b>ver</b> qué hay de nuevo sin arriesgarte, usa <code>git fetch</code> y luego <code>git log HEAD..origin/main</code>.</p>
+<p><b>Antes de trabajar cada día:</b> <code>git pull</code> siempre primero. Eso evita el error clásico de "trabajé tres horas y alguien ya había subido cambios".</p></div>
+
+<h2>3. Publicar un proyecto por primera vez</h2>
+<pre># 1. Verifica que tu .gitignore está listo — ANTES de continuar
+cat .gitignore
+
+# 2. Conecta con GitHub
+git remote add origin https://github.com/TU_USUARIO/mi-proyecto.git
+
+# 3. Asegura que tu rama se llama main
 git branch -M main
+
+# 4. Sube y vincula
 git push -u origin main</pre>
-<h2>Comandos del día a día</h2>
-<table><tr><th>Comando</th><th>Qué hace</th></tr>
-<tr><td><code>git push</code></td><td>Sube commits</td></tr>
-<tr><td><code>git pull</code></td><td>Trae cambios</td></tr>
-<tr><td><code>git clone &lt;url&gt;</code></td><td>Descargar un repo</td></tr>
-<tr><td><code>git remote -v</code></td><td>Ver remotos</td></tr></table>
-<h2>Ciclo completo</h2><pre>git add .
-git commit -m "mensaje"
-git push</pre>
-</main><footer>OVA educativo — Carlos Ceballos · 2026</footer>
-</div></body></html>
+<p>La <code>-u</code> (<code>--set-upstream</code>) crea el vínculo para que después <code>git push</code> y <code>git pull</code> funcionen <b>sin argumentos</b>.</p>
+
+<h2>4. Autenticación — dos métodos</h2>
+<p><b>Opción A — HTTPS con token (PAT).</b> La más simple. GitHub ya no acepta tu contraseña.</p>
+<ol>
+<li>Ve a <b>Settings → Developer settings → Personal access tokens</b></li>
+<li>Genera un token con permiso <code>repo</code></li>
+<li>Al hacer push: usuario normal, y en <b>contraseña</b> pegas el token</li>
+</ol>
+<div class="card"><p><b>🔒 Seguridad:</b> el PAT es una contraseña. Si se comparte o se filtra, revócalo desde Settings. Nunca lo escribas en el código ni en un <code>.md</code>.</p></div>
+
+<p><b>Opción B — SSH (recomendada).</b> Configuras la clave una vez y nunca más escribes credenciales.</p>
+<pre># 1. Generar clave
+ssh-keygen -t ed25519 -C "tu@correo.com"
+
+# 2. Copiar la clave pública
+cat ~/.ssh/id_ed25519.pub</pre>
+<ol start="3">
+<li>Pégala en <b>GitHub → Settings → SSH and GPG keys → New SSH key</b></li>
+<li>Cambia el remoto a SSH</li>
+</ol>
+<pre>git remote set-url origin git@github.com:TU_USUARIO/mi-proyecto.git
+
+ssh -T git@github.com     # debe responder "Hi TU_USUARIO!"</pre>
+
+<h2>5. Fork y Pull Request — trabajar sin permisos</h2>
+<p>Si el repositorio es de otra persona, <b>no puedes hacer push</b>. El flujo correcto es:</p>
+<pre>1. Fork        → creas tu copia en tu cuenta
+2. Clone       → trabajas en tu copia
+3. Commit+Push → subes a tu fork
+4. Pull Request → pides que integren tus cambios</pre>
+<p>Es el flujo estándar para contribuir a proyectos abiertos.</p>
+<div class="card"><p><b>Pull Request = proponer cambios, no imponerlos.</b> Tú proposes; quien mantiene el proyecto revisa, discute y acepta.</p>
+<p>Al abrir un PR, escribe:</p>
+<pre>## ¿Qué cambia?
+Descripción breve de los cambios.
+
+## ¿Por qué?
+El problema que resuelve.
+
+## ¿Cómo lo probé?
+Pasos para verificar que funciona.</pre>
+<p>Esto no es cortesía: es lo que hace que tu trabajo sea revisado en minutos en vez de descartado.</p></div>
+
+<h2>6. GitHub Pages — publicar sin servidor</h2>
+<p>GitHub Pages sirve HTML, CSS y JS directamente desde tu repositorio. Es lo que usan los cursos de este perfil para las demos en vivo.</p>
+<pre># Crea una rama especial para el sitio
+git switch -c gh-pages
+
+# Copia tu contenido a la raíz de esa rama
+cp -r contenido/* .
+
+git add .
+git commit -m "docs: publicar sitio estático"
+git push -u origin gh-pages</pre>
+<p>Luego actívalo en <b>Settings → Pages → Source: rama <code>gh-pages</code></b>. El sitio queda en <code>https://TU_USUARIO.github.io/REPO/</code> y <b>se actualiza solo</b> en cada push (tarda entre 1 y 10 minutos).</p>
+
+<h2>7. Otros comandos útiles</h2>
+<pre>git clone https://github.com/USER/REPO.git   # descargar un proyecto
+git stash                    # guardar cambios a un lado
+git stash pop                # recuperarlos
+git tag v1.0                 # marcar una versión
+git show &lt;hash&gt;              # ver un commit completo</pre>
+
+<h2>8. El ciclo completo del día a día</h2>
+<pre>git pull                              # 1. Traer lo nuevo
+# ... trabajas ...
+git add .                             # 2. Preparar
+git commit -m "feat: lo que hice"      # 3. Confirmar
+git push                              # 4. Publicar</pre>
+<p>Cuatro pasos. Ese es el 90% de tu vida con Git.</p>
+
+<details><summary>🧪 Ejercicio 3 — Publicar en GitHub</summary>
+<ol>
+<li>Crea un repositorio vacío <b>en GitHub</b> (con README, para ver qué pasa)</li>
+<li>Localmente: <code>git clone https://github.com/TU_USUARIO/mi-primer-repo.git &amp;&amp; cd mi-primer-repo</code></li>
+<li>Crea <code>.gitignore</code> con <code>node_modules/</code> y <code>.env</code></li>
+<li>Crea <code>README.md</code> con título, descripción e instrucciones</li>
+<li><code>git add .</code> → <code>git commit -m "docs: README inicial"</code> → <code>git push</code></li>
+<li>Verifica en el navegador que el README aparece</li>
+<li>Haz un segundo commit y confirma que el historial se ve en GitHub</li>
+</ol>
+<p><b>🎯 Criterio de éxito:</b> el repositorio existe con README visible y al menos 2 commits, <b>sin</b> archivos que debieran estar ignorados.</p>
+</details>
+
+<h2>🎓 Cierre del curso</h2>
+<div class="card">
+<pre>Lección 1:  crear repo, registrar cambios, ignorar lo que no va
+Lección 2:  trabajar en paralelo, integrar, resolver conflictos, deshacer
+Lección 3:  publicar, compartir, colaborar</pre>
+<p><b>👉 Ruta siguiente:</b> ya controlas Git, así que escribe código de verdad. Elige un lenguaje (JavaScript o Python), haz un proyecto real, publícalo con GitHub Pages — ya sabes hacerlo — y abre tu primer Pull Request a un proyecto abierto. Es la mejor forma de aprender a leer código ajeno.</p>
+</div>
+
+<a class="btn" href="leccion2.html">📗 Anterior</a>
+<a class="btn" href="evaluacion.html">📝 Ir a la evaluación</a>
+<a class="btn" href="modulo3/index.html">📘 Ir al Módulo 3</a>
+<button class="btn" onclick="marcar('leccion3',this)">✅ Marcar lección como leída</button>
+
+</main><footer>OVA educativo — Carlos Ceballos · 2026 · CC BY 4.0</footer></div>
+<script src="js/storage.js"></script>
+<script src="js/progress.js"></script>
+<script>
+function marcar(id,btn){ markLessonRead(id); btn.textContent='✅ Lección marcada como leída'; btn.disabled=true; }
+</script>
+</body></html>

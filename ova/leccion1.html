@@ -1,31 +1,142 @@
-<!DOCTYPE html><html lang="es"><head><meta charset="UTF-8"><title>Lección 1</title><link rel="stylesheet" href="css/style.css"></head>
-<body><aside class="sidebar">
-<h2>📘 Git desde Cero</h2>
+<!DOCTYPE html><html lang="es"><head><meta charset="UTF-8"><title>Lección 1 — Git Básico</title><link rel="stylesheet" href="css/style.css"></head>
+<body><aside class="sidebar"><h2>📘 Git desde Cero</h2>
 <a href="index.html">🏠 Inicio</a>
+<a href="diagnostico.html">🩺 Diagnóstico</a>
 <a href="leccion1.html">📗 Lección 1</a>
 <a href="leccion2.html">📗 Lección 2</a>
 <a href="leccion3.html">📗 Lección 3</a>
+<a href="modulo1/index.html">📘 Módulo 1</a>
+<a href="modulo2/index.html">📗 Módulo 2</a>
+<a href="modulo3/index.html">📘 Módulo 3</a>
 <a href="evaluacion.html">📝 Evaluación</a>
+<a href="portafolio.html">📂 Portafolio</a>
+<a href="resultados.html">🏆 Resultados</a>
 </aside>
 <div class="main">
 <header><h1>📗 Lección 1 — Git Básico</h1></header>
 <main>
-<h2>¿Qué es Git?</h2><p>Sistema de <b>control de versiones</b>: registra cada cambio de tus archivos.</p>
-<h2>Las 3 áreas</h2>
-<ol><li><b>Working directory</b> — donde editas</li><li><b>Staging area</b> — preparas con <code>git add</code></li><li><b>Repository</b> — commits con <code>git commit</code></li></ol>
-<h2>Comandos clave</h2>
+
+<div class="card"><h2>📌 Idea central</h2>
+<p>Git no guarda "archivos": guarda <b>cambios</b>. Cada commit es una foto del proyecto con una nota que explica qué cambió y por qué. Tu valor no está en teclear comandos, está en escribir commits que tu yo del futuro pueda entender.</p></div>
+
+<h2>1. ¿Qué problema resuelve Git?</h2>
+<p>Git es un <b>sistema de control de versiones</b>. Sin él, guardar el estado de un proyecto significa copiar la carpeta entera a otra llamada <code>proyecto_v2_final</code>. Con Git guardas <b>solo la diferencia</b> entre versiones y puedes volver a cualquier punto anterior.</p>
+<table><tr><th>Concepto</th><th>Qué es</th><th>Ejemplo</th></tr>
+<tr><td><b>Repositorio</b></td><td>La carpeta con todo el historial</td><td><code>mi-proyecto/</code></td></tr>
+<tr><td><b>Commit</b></td><td>Una foto del proyecto con mensaje</td><td><code>Agregué el formulario de contacto</code></td></tr>
+<tr><td><b>Historial</b></td><td>La lista ordenada de commits</td><td><code>git log</code></td></tr>
+<tr><td><b>Autor</b></td><td>Quién hizo el commit</td><td>tu nombre y correo</td></tr>
+</table>
+
+<h2>2. Configuración inicial</h2>
+<p>Tu nombre y correo viajan <b>dentro</b> de cada commit. Si no los configuras, tu trabajo queda firmado por un desconocido.</p>
+<pre>git config --global user.name "Carlos Ceballos"
+git config --global user.email "tu@correo.com"
+git config --global init.defaultBranch main
+
+git config --list --global    # verificar</pre>
+
+<h2>3. Las 3 áreas — el corazón de Git</h2>
+<p>Este es <b>el concepto que más cuesta</b>. Si entiendes las 3 áreas, entiendes Git.</p>
+<pre> 📁 Tu carpeta          📦 Preparado          💾 Historial
+┌────────────┐        ┌────────────┐        ┌────────────┐
+│  Working   │  add   │  Staging   │ commit │ Repository │
+│  Directory │ ─────► │  (Index)   │ ─────► │            │
+│            │        │            │        │            │
+│ Editas aquí│        │ Decides    │        │ Confirmado │
+│ archivos   │        │ qué entra  │        │ No se      │
+│ sueltos    │        │            │        │ borra fácil│
+└────────────┘        └────────────┘        └────────────┘</pre>
+<p><b>La idea clave:</b> Git te obliga a pasar por una <i>decisión explícita</i>. Nada entra al historial sin que tú lo apruebes. Por eso <code>git add</code> no es "guardar" — es <b>elegir qué va en la próxima foto</b>.</p>
+<p>El staging area es lo que hace útil a Git: puedes tener 10 archivos modificados y preparar solo 2.</p>
+<pre>git status                    # ver qué hay en cada área
+git add Dock.md app.js        # solo estos dos
+git commit -m "Corrige dockeo en móvil"
+# los otros 8 siguen sin preparar</pre>
+
+<h2>4. Comandos del ciclo básico</h2>
 <table><tr><th>Comando</th><th>Qué hace</th></tr>
-<tr><td><code>git init</code></td><td>Inicializa repo (una vez)</td></tr>
-<tr><td><code>git status</code></td><td>Ver estado</td></tr>
-<tr><td><code>git add .</code></td><td>Preparar todo</td></tr>
-<tr><td><code>git commit -m "msg"</code></td><td>Guardar</td></tr>
-<tr><td><code>git log --oneline</code></td><td>Historial</td></tr></table>
-<h2>Ejemplo</h2>
-<pre>mkdir mi-proyecto && cd mi-proyecto
+<tr><td><code>git init</code></td><td>Crea el repo — una sola vez</td></tr>
+<tr><td><code>git status</code></td><td><b>Siempre</b> antes de commitear</td></tr>
+<tr><td><code>git add archivo.txt</code></td><td>Preparar un archivo</td></tr>
+<tr><td><code>git add .</code></td><td>Preparar todo lo modificado</td></tr>
+<tr><td><code>git diff</code></td><td>Ver qué cambiaste sin preparar</td></tr>
+<tr><td><code>git diff --staged</code></td><td>Ver qué vas a commitear</td></tr>
+<tr><td><code>git commit -m "msg"</code></td><td>Confirmar</td></tr>
+<tr><td><code>git log --oneline</code></td><td>Historial resumido</td></tr>
+</table>
+
+<h2>5. Buenos mensajes de commit</h2>
+<p>Un commit mal escrito es una bomba de relojería para tu equipo y para tu yo del futuro.</p>
+<pre>git commit -m "arreglado"                          # ❌ inútil
+git commit -m "Corregir validación de email"       # ✅ útil</pre>
+<p><b>Regla de oro:</b> el mensaje dice <b>qué</b> cambiaste y <b>por qué</b>, no cómo.</p>
+<table><tr><th>Tipo</th><th>Ejemplo</th></tr>
+<tr><td><code>feat</code></td><td>feat: agregar recuperación de contraseña</td></tr>
+<tr><td><code>fix</code></td><td>fix: evitar doble envío en el formulario</td></tr>
+<tr><td><code>docs</code></td><td>docs: explicar la instalación en el README</td></tr>
+</table>
+
+<h2>6. .gitignore — hazlo ANTES del primer push</h2>
+<p>Por defecto Gitlify <b>sí</b> sube todo, incluidos tus archivos personales y secretos. Esta es la causa número uno de filtrar contraseñas.</p>
+<pre># Dependencias
+node_modules/
+vendor/
+
+# Secretos — NUNCA subir
+.env
+.env.local
+*.key
+id_rsa
+
+# Sistema operativo
+.DS_Store
+Thumbs.db
+
+# Herramientas
+.vscode/
+.idea/</pre>
+<p><b>Regla:</b> se crea <b>antes</b> del primer <code>push</code>, no después. Si ya subiste algo que debías ignorar, borrarlo del historial requiere <code>filter-repo</code> — por eso es mejor prevenir.</p>
+
+<h2>7. Ejemplo completo</h2>
+<pre>mkdir mi-proyecto &amp;&amp; cd mi-proyecto
 git init
-echo "hola" &gt; hola.txt
-git add hola.txt
-git commit -m "Primer commit"
+
+printf 'node_modules/\n.env\n' &gt; .gitignore
+echo "# Mi proyecto" &gt; README.md
+echo "console.log('hola')" &gt; app.js
+
+git add .
+git commit -m "chore: estructura inicial del proyecto"
+
+echo "console.log('hola mundo')" &gt; app.js
+git diff                    # revisa antes de preparar
+git add app.js
+git commit -m "feat: mensaje de saludo en español"
+
 git log --oneline</pre>
-</main><footer>OVA educativo — Carlos Ceballos · 2026</footer>
-</div></body></html>
+
+<details><summary>🧪 Ejercicio 1 — Primeros pasos</summary>
+<ol>
+<li>Crea <code>~/practica-git-1</code> e inicializa el repo</li>
+<li>Crea un <code>.gitignore</code> con <code>node_modules/</code> y <code>.env</code></li>
+<li>Crea <code>README.md</code> con una línea de descripción</li>
+<li><code>git add .</code> y commit → revisa con <code>git log --oneline</code></li>
+<li>Edita el README y mira el cambio con <code>git diff</code></li>
+<li>Prepara <b>solo</b> el README y commitea</li>
+<li>Comprueba con <code>git status</code> que el resto quedó intacto</li>
+</ol>
+<p><b>🎯 Criterio de éxito:</b> 2 commits con mensajes descriptivos, y entiendes por qué <code>git diff</code> va antes de <code>git add</code>.</p>
+</details>
+
+<a class="btn" href="leccion2.html">📗 Siguiente: Ramas y conflictos</a>
+<a class="btn" href="modulo1/index.html">📘 Ir al Módulo 1</a>
+<button class="btn" onclick="marcar('leccion1',this)">✅ Marcar lección como leída</button>
+
+</main><footer>OVA educativo — Carlos Ceballos · 2026</footer></div>
+<script src="js/storage.js"></script>
+<script src="js/progress.js"></script>
+<script>
+function marcar(id,btn){ markLessonRead(id); btn.textContent='✅ Lección marcada como leída'; btn.disabled=true; }
+</script>
+</body></html>
