@@ -1,3 +1,11 @@
+## 🎓 Demostración en vivo
+
+**https://wcarlosceballos.github.io/curso-git/**
+
+Ábrela en el navegador: no requiere instalación ni registro. Funciona offline una vez
+cargada, porque el progreso se guarda en `localStorage`.
+
+---
 # 📘 Curso: Git desde Cero
 
 Aprende a usar Git tú mismo, con el mismo enfoque pedagógico que el curso anterior.
