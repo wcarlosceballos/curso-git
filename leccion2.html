@@ -1,28 +1,159 @@
-<!DOCTYPE html><html lang="es"><head><meta charset="UTF-8"><title>Lección 2</title><link rel="stylesheet" href="css/style.css"></head>
-<body><aside class="sidebar">
-<h2>📘 Git desde Cero</h2>
+<!DOCTYPE html><html lang="es"><head><meta charset="UTF-8"><title>Lección 2 — Ramas y Conflictos</title><link rel="stylesheet" href="css/style.css"></head>
+<body><aside class="sidebar"><h2>📘 Git desde Cero</h2>
 <a href="index.html">🏠 Inicio</a>
+<a href="diagnostico.html">🩺 Diagnóstico</a>
 <a href="leccion1.html">📗 Lección 1</a>
 <a href="leccion2.html">📗 Lección 2</a>
 <a href="leccion3.html">📗 Lección 3</a>
+<a href="modulo1/index.html">📘 Módulo 1</a>
+<a href="modulo2/index.html">📗 Módulo 2</a>
+<a href="modulo3/index.html">📘 Módulo 3</a>
 <a href="evaluacion.html">📝 Evaluación</a>
+<a href="portafolio.html">📂 Portafolio</a>
+<a href="resultados.html">🏆 Resultados</a>
 </aside>
 <div class="main">
-<header><h1>📗 Lección 2 — Ramas y Merge</h1></header>
+<header><h1>📗 Lección 2 — Ramas, Merge y Conflictos</h1></header>
 <main>
-<h2>¿Qué es una rama?</h2><p>Una <b>línea de trabajo paralela</b> sin tocar <code>main</code>.</p>
-<h2>Comandos</h2>
+
+<div class="card"><h2>📌 Idea central</h2>
+<p>Una rama es una línea de trabajo paralela. El merge es donde Git te obliga a tomar una decisión explícita: cuando dos personas cambian lo mismo, Git <b>no elige por ti</b>. Entender cómo resolver conflictos es lo que separa a quien usa Git de quien pelea contra Git.</p></div>
+
+<h2>1. ¿Por qué ramas?</h2>
+<p>Sin ramas trabajas directo sobre <code>main</code>. Si algo sale mal, no hay forma de volver atrás sin romper nada.</p>
+<pre>main         ──A──B──C──────────────►  (estable, siempre desplegable)
+                    \
+feature/login       D──E──F──►        (trabajo aislado, se integra después)</pre>
+<div class="card">
+<p><b>Reglas de oro:</b></p>
+<ul>
+<li><code>main</code> siempre debe funcionar. Nunca trabajes directamente encima.</li>
+<li>Una rama = una tarea o una funcionalidad.</li>
+<li>La rama vive poco: nace, se integra, se borra.</li>
+</ul></div>
+
+<h2>2. Comandos de ramas</h2>
 <table><tr><th>Comando</th><th>Qué hace</th></tr>
-<tr><td><code>git branch</code></td><td>Ver ramas</td></tr>
-<tr><td><code>git checkout -b mi-rama</code></td><td>Crear y cambiar</td></tr>
-<tr><td><code>git checkout main</code></td><td>Volver a main</td></tr>
-<tr><td><code>git merge mi-rama</code></td><td>Unir cambios</td></tr></table>
-<h2>Flujo típico</h2>
-<pre>git checkout -b mejorar-readme
-# editas README.md
+<tr><td><code>git branch -v</code></td><td>Listar ramas con su último commit</td></tr>
+<tr><td><code>git switch -c feature/login</code></td><td>Crear y cambiar <span class="chip">(moderno)</span></td></tr>
+<tr><td><code>git switch main</code></td><td>Cambiar de rama</td></tr>
+<tr><td><code>git merge feature/login</code></td><td>Integrar en la rama actual</td></tr>
+<tr><td><code>git branch -d feature/login</code></td><td>Borrar ya integrada (segura)</td></tr>
+<tr><td><code>git branch -D feature/login</code></td><td>Borrar forzando (peligrosa)</td></tr>
+<tr><td><code>git log --graph --oneline --all</code></td><td>Historial como diagrama</td></tr>
+</table>
+<p><b>Modernización:</b> <code>git switch</code> y <code>git restore</code> reemplazaron a <code>git checkout</code>, que hacía tres cosas distintas a la vez. Usa <code>switch</code> para cambiar de rama y <code>restore</code> para deshacer cambios.</p>
+
+<h2>3. El flujo de trabajo típico</h2>
+<pre>git switch main
+git pull                              # actualizar antes de crear la rama
+git switch -c mejorar-readme
+
+# ... trabajas ...
 git add README.md
-git commit -m "Mejorar README"
-git checkout main
-git merge mejorar-readme</pre>
-</main><footer>OVA educativo — Carlos Ceballos · 2026</footer>
-</div></body></html>
+git commit -m "docs: explicar la instalación paso a paso"
+
+git switch main
+git merge mejorar-readme
+git push
+git branch -d mejorar-readme</pre>
+<p><b>Fast-forward:</b> si <code>main</code> no se movió desde que creaste la rama, Git simplemente mueve el puntero — no hay commit de merge. Es el caso ideal.</p>
+<pre>main         ──A──B──M──────────►
+                    \         /
+feature/fix         C──D────/</pre>
+
+<h2>4. Conflictos — la parte que nadie te explica</h2>
+<p><b>¿Cuándo ocurre?</b> Cuando Git debe fusionar dos versiones del <b>mismo archivo</b> que <b>tocaron las mismas líneas</b> de forma incompatible.</p>
+<pre>main         ──A──B──C──►        línea 3: "   hola   "
+                    \
+feature/fix         D──E──►        línea 3: "   goodbye "</pre>
+<p>Git <b>no puede decidir</b> cuál de los dos textos es el correcto. Solo tú sabes. Por eso te lo pregunta.</p>
+<p><b>NO</b> hay conflicto cuando cambias archivos distintos, o líneas distintas del mismo archivo.</p>
+
+<h2>5. Resolver un conflicto — paso a paso</h2>
+<p><b>Paso 1 — Git te avisa:</b></p>
+<pre>git merge feature/login
+
+CONFLICT (content): Merge conflict in README.md
+Automatic merge failed; fix conflicts and then commit the result.</pre>
+
+<p><b>Paso 2 — Git marca el archivo:</b></p>
+<pre>&lt;&lt;&lt;&lt;&lt;&lt;&lt; HEAD
+Bienvenido a mi proyecto
+=======
+Hola, bienvenido a MI proyecto
+&gt;&gt;&gt;&gt;&gt;&gt;&gt; feature/login</pre>
+<table><tr><th>Marca</th><th>Significado</th></tr>
+<tr><td><code>&lt;&lt;&lt;&lt;&lt;&lt;&lt; HEAD</code></td><td>Empieza el conflicto — <b>HEAD</b> es tu rama actual</td></tr>
+<tr><td><code>=======</code></td><td>Separador</td></tr>
+<tr><td><code>&gt;&gt;&gt;&gt;&gt;&gt;&gt; rama</code></td><td>Fin — la rama que se está integrando</td></tr>
+</table>
+
+<p><b>Paso 3 — Editas y decides el resultado final:</b></p>
+<pre># Mi proyecto
+
+Bienvenido a MI proyecto</pre>
+<p>Borra <b>todas</b> las marcas. Si queda alguna, Git sigue viendo el conflicto.</p>
+
+<p><b>Paso 4 — Marcas como resuelto y confirmas:</b></p>
+<pre>git add README.md          # el add es lo que marca "resuelto"
+git commit -m "merge: integrar cambios de feature/login"</pre>
+<div class="card"><p><b>⚠️ Error clásico:</b> borras las marcas pero olvidas el <code>git add</code>. Git cree que el conflicto sigue abierto y no te deja commitear. El <code>git add</code> es <b>obligatorio</b>.</p></div>
+
+<h2>6. Deshacer — tres comandos que se confunden</h2>
+<p>Estos tres <b>no son intercambiables</b>. Confundirlos puede borrar trabajo real:</p>
+<table><tr><th>Comando</th><th>Qué deshace</th><th>¿Salva al historial?</th></tr>
+<tr><td><code>git restore archivo</code></td><td>Descarta cambios <b>no preparados</b></td><td>✅ Sí</td></tr>
+<tr><td><code>git restore --staged archivo</code></td><td>Saca el archivo del staging</td><td>✅ Sí</td></tr>
+<tr><td><code>git revert &lt;hash&gt;</code></td><td><b>Crea un commit nuevo</b> que deshace otro</td><td>✅ Opción segura</td></tr>
+<tr><td><code>git reset --hard &lt;hash&gt;</code></td><td><b>Borra commits</b> y vuelve atrás</td><td>❌ <b>No, se pierde para siempre</b></td></tr>
+</table>
+<div class="card"><p><b>Regla de la vida real:</b> en repositorio compartido usa <code>revert</code>. Nunca <code>reset --hard</code> sobre <code>main</code>.</p></div>
+<pre>git log --oneline                  # busca el hash
+git revert a1b2c3d                 # crea un commit que lo revierte
+
+git commit --amend -m "otro mensaje"   # arreglar el mensaje del último</pre>
+
+<h2>7. Ejemplo completo</h2>
+<pre>git switch -c feature/saludo
+echo "Hola, bienvenido a MI proyecto" &gt; README.md
+git add README.md
+git commit -m "docs: saludo más cercano"
+
+git switch main
+echo " # Mi proyecto" &gt; README.md        # ¡misma línea!
+git add README.md
+git commit -m "docs: agregar título al README"
+
+git merge feature/saludo
+# ⚠️ CONFLICT en README.md
+# edita, borra marcas, luego:
+git add README.md
+git commit -m "merge: integrar saludo del proyecto"</pre>
+
+<details><summary>🧪 Ejercicio 2 — Ramas y conflicto real</summary>
+<ol>
+<li>Crea la rama <code>feature/titulo</code> y cambia la primera línea del <code>README.md</code></li>
+<li>Vuelve a <code>main</code> y cambia <b>la misma línea</b> de forma diferente</li>
+<li><code>git merge feature/titulo</code> → observa el conflicto</li>
+<li>Lee el <code>README.md</code> y localiza <code>&lt;&lt;&lt;&lt;&lt;&lt;&lt;</code>, <code>=======</code>, <code>&gt;&gt;&gt;&gt;&gt;&gt;&gt;</code></li>
+<li>Decide el texto final y <b>borra todas las marcas</b></li>
+<li><code>git add README.md</code> y commitea el merge</li>
+<li>Verifica con <code>git log --graph --oneline</code></li>
+<li>Borra la rama con <code>git branch -d feature/titulo</code></li>
+</ol>
+<p><b>🎯 Criterio de éxito:</b> el README final tiene el texto que elegiste, sin marcas, y el grafo muestra la rama integrada.</p>
+</details>
+
+<a class="btn" href="leccion1.html">📗 Anterior</a>
+<a class="btn" href="leccion3.html">📗 Siguiente: GitHub</a>
+<a class="btn" href="modulo2/index.html">📗 Ir al Módulo 2</a>
+<button class="btn" onclick="marcar('leccion2',this)">✅ Marcar lección como leída</button>
+
+</main><footer>OVA educativo — Carlos Ceballos · 2026</footer></div>
+<script src="js/storage.js"></script>
+<script src="js/progress.js"></script>
+<script>
+function marcar(id,btn){ markLessonRead(id); btn.textContent='✅ Lección marcada como leída'; btn.disabled=true; }
+</script>
+</body></html>

@@ -1,0 +1,85 @@
+<!DOCTYPE html><html lang="es"><head><meta charset="UTF-8"><title>🏆 Resultados</title><link rel="stylesheet" href="css/style.css"></head>
+<body><aside class="sidebar"><h2>📘 Git desde Cero</h2>
+<a href="index.html">🏠 Inicio</a>
+<a href="diagnostico.html">🩺 Diagnóstico</a>
+<a href="leccion1.html">📗 Lección 1</a>
+<a href="leccion2.html">📗 Lección 2</a>
+<a href="leccion3.html">📗 Lección 3</a>
+<a href="modulo1/index.html">📘 Módulo 1</a>
+<a href="modulo2/index.html">📗 Módulo 2</a>
+<a href="modulo3/index.html">📘 Módulo 3</a>
+<a href="evaluacion.html">📝 Evaluación</a>
+<a href="portafolio.html">📂 Portafolio</a>
+<a href="resultados.html">🏆 Resultados</a>
+</aside>
+<div class="main"><header><h1>🏆 Resultados y insignias</h1></header><main>
+
+<p>Tu desempeño se calcula automáticamente a medida que avanzas. Esta página resume todo.</p>
+
+<div class="card"><h3>📈 Resumen</h3><div id="resumen"></div></div>
+<div class="card"><h3>🏅 Insignias</h3><div id="insignias"></div></div>
+<div class="card"><h3>📋 Detalle</h3><div id="detalle"></div></div>
+
+<a class="btn" href="portafolio.html">📂 Ver mi portafolio</a>
+<a class="btn" href="index.html">🏠 Volver al inicio</a>
+
+</main><footer>OVA educativo — Carlos Ceballos · 2026</footer></div>
+<script src="js/storage.js"></script>
+<script src="js/progress.js"></script>
+<script>
+const INSIGNIAS = [
+  {id:'diag',  nombre:'Explorador', emoji:'🩺', req:p=>!!p.diagnostico,
+   desc:'Completaste el diagnóstico inicial'},
+  {id:'lec1',  nombre:'Fundamentos', emoji:'📗', req:p=>!!(p.lecciones||{}).leccion1,
+   desc:'Leíste la lección 1 — Git Básico'},
+  {id:'lec2',  nombre:'Integrador', emoji:'🔀', req:p=>!!(p.lecciones||{}).leccion2,
+   desc:'Leíste la lección 2 — Ramas y conflictos'},
+  {id:'lec3',  nombre:'Publicador', emoji:'🚀', req:p=>!!(p.lecciones||{}).leccion3,
+   desc:'Leíste la lección 3 — GitHub'},
+  {id:'m1',    nombre:'Maestro de Commits', emoji:'📘', req:p=>!!p.modulo1,
+   desc:'Completaste el módulo 1'},
+  {id:'m2',    nombre:'Arquitecto de Ramas', emoji:'📗', req:p=>!!p.modulo2,
+   desc:'Completaste el módulo 2'},
+  {id:'m3',    nombre:'GitHub Master', emoji:'🌐', req:p=>!!p.modulo3,
+   desc:'Completaste el módulo 3'},
+  {id:'ev1',   nombre:'Evidencia Módulo 1', emoji:'📋', req:p=>!!(p.portafolio||{}).reto1_evidencia,
+   desc:'Guardaste la evidencia del reto 1'},
+  {id:'ev2',   nombre:'Guerrero de Conflictos', emoji:'⚔️', req:p=>!!(p.portafolio||{}).reto2_conflicto,
+   desc:'Resolviste y documentaste un conflicto'},
+  {id:'ev3',   nombre:'Publicador Real', emoji:'🚀', req:p=>!!(p.portafolio||{}).reto3_url,
+   desc:'Publicaste un repositorio propio'},
+  {id:'fin',   nombre:'Curso Completado', emoji:'🎓', req:p=>!!(p.final&&p.final.percent>=60),
+   desc:'Aprobaste la evaluación final con 60% o más'}
+];
+
+function render(){
+  const p = getProgress();
+  const pct = getProgressPercent();
+
+  document.getElementById('resumen').innerHTML =
+    '<p><b>Progreso general:</b> <b>'+pct+'%</b></p>'+
+    '<progress value="'+pct+'" max="100" style="width:100%;height:16px;accent-color:#4361ee"></progress>';
+
+  const ganadas = INSIGNIAS.filter(i=>i.req(p));
+  document.getElementById('insignias').innerHTML =
+    '<p>'+ganadas.length+' de '+INSIGNIAS.length+' insignias obtenidas.</p>'+
+    INSIGNIAS.map(i=>{
+      const ok = i.req(p);
+      return '<p style="'+(ok?'':'opacity:.45')+'">'+i.emoji+' <b>'+i.nombre+'</b> — '+
+             (ok ? '<span style="color:#22c55e">✅ '+i.desc+'</span>' : '<i>🔒 '+i.desc+'</i>')+'</p>';
+    }).join('');
+
+  let d = '<p><b>Diagnóstico:</b> '+(p.diagnostico? p.diagnostico.score+'/8 — <b>'+p.diagnostico.nivel+'</b>':'—')+'</p>';
+  [1,2,3].forEach(m=>{
+    d += '<p><b>Módulo '+m+':</b> '+(p['modulo'+m]?'completado':'pendiente')+
+         (p['score'+m]!==undefined?' — quiz <b>'+p['score'+m]+'/100</b>':'')+'</p>';
+  });
+  d += '<p><b>Evaluación final:</b> '+(p.final? p.final.percent+'% ('+p.final.score+' correctas)':'—')+'</p>';
+  document.getElementById('detalle').innerHTML = d;
+
+  document.querySelectorAll('.sidebar a').forEach(a=>a.classList.remove('done','pending'));
+}
+
+render();
+</script>
+</body></html>

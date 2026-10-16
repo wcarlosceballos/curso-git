@@ -1,33 +1,109 @@
-<!DOCTYPE html><html lang="es"><head><meta charset="UTF-8"><title>Evaluación</title><link rel="stylesheet" href="css/style.css"></head>
-<body><aside class="sidebar">
-<h2>📘 Git desde Cero</h2>
+<!DOCTYPE html><html lang="es"><head><meta charset="UTF-8"><title>📝 Evaluación final</title><link rel="stylesheet" href="css/style.css"></head>
+<body><aside class="sidebar"><h2>📘 Git desde Cero</h2>
 <a href="index.html">🏠 Inicio</a>
+<a href="diagnostico.html">🩺 Diagnóstico</a>
 <a href="leccion1.html">📗 Lección 1</a>
 <a href="leccion2.html">📗 Lección 2</a>
 <a href="leccion3.html">📗 Lección 3</a>
+<a href="modulo1/index.html">📘 Módulo 1</a>
+<a href="modulo2/index.html">📗 Módulo 2</a>
+<a href="modulo3/index.html">📘 Módulo 3</a>
 <a href="evaluacion.html">📝 Evaluación</a>
+<a href="portafolio.html">📂 Portafolio</a>
+<a href="resultados.html">🏆 Resultados</a>
 </aside>
-<div class="main">
-<header><h1>📝 Evaluación</h1></header>
-<main>
-<div class="quiz">
-<h3>1. ¿Qué comando sube tus commits al remoto?</h3>
-<button onclick="resp(this)">git pull</button><button data-ok="1" onclick="resp(this)">git push</button><button onclick="resp(this)">git clone</button><br>
-<h3>2. ¿Cuál es el ciclo correcto?</h3>
-<button data-ok="1" onclick="resp(this)">add → commit → push</button><button onclick="resp(this)">commit → add → push</button><br>
-<h3>3. ¿Para qué sirve git init?</h3>
-<button data-ok="1" onclick="resp(this)">Inicializar un repositorio (una vez)</button><button onclick="resp(this)">Crear una rama</button><br>
-<p id="res"></p>
-</div>
+<div class="main"><header><h1>📝 Evaluación final</h1></header><main>
+
+<p>10 preguntas que cubren las tres lecciones. Necesitas <b>60%</b> para aprobar.</p>
+<p id="avance">Respondidas: 0 de 10</p>
+<progress id="barra" value="0" max="10" style="width:100%;height:14px;accent-color:#4361ee"></progress>
+
+<div class="quiz" id="contenedor"></div>
+
+<p id="res" style="font-weight:bold;font-size:1.1em"></p>
+
+<button class="btn" onclick="entregar()">📋 Entregar evaluación</button>
+<button class="btn" onclick="reiniciar()">🔄 Reiniciar</button>
+
+<details><summary>💡 Antes de entregar</summary>
+<p>Revisa que respondiste las 10. Puedes corregir y volver a entregar.</p>
+<p>Las respuestas se guardan en tu navegador: si cierras la página, se pierden hasta que entregues.</p>
+</details>
+
+</main><footer>OVA educativo — Carlos Ceballos · 2026</footer></div>
+<script src="js/storage.js"></script>
+<script src="js/progress.js"></script>
 <script>
-let score=0, total=3, answered={};
-function resp(btn){
-  const id=btn.closest('div').id||btn.previousElementSibling;
-  const correct = btn.hasAttribute('data-ok');
-  document.getElementById('res').textContent = correct ? '✅ ¡Correcto!' : '❌ Intenta de nuevo';
-  if(correct && !btn.dataset.done){score++;btn.dataset.done='1';}
-  document.getElementById('res').textContent += '  — Puntaje: '+score+'/'+total;
+const PREGUNTAS = [
+  {p:'1. ¿Para qué sirve <code>git init</code>?',
+   o:['Inicializar un repositorio (una sola vez)','Crear una rama','Subir archivos a GitHub'], c:0},
+  {p:'2. ¿Cuáles son las 3 áreas de Git, en orden?',
+   o:['Working → Staging → Repository','Repository → Working → Staging','Staging → Repository → Working'], c:0},
+  {p:'3. ¿Cuál es el ciclo correcto para guardar un cambio?',
+   o:['commit → add → push','add → commit → push','push → add → commit'], c:1},
+  {p:'4. ¿Qué hace <code>git status</code>?',
+   o:['Muestra el estado del repositorio','Sube tus commits','Borra el historial'], c:0},
+  {p:'5. ¿Para qué sirve <code>git diff</code>?',
+   o:['Ver los cambios que aún no has preparado','Subir cambios al remoto','Comparar ramas'], c:0},
+  {p:'6. ¿Qué archivo NUNCA debes subir a GitHub?',
+   o:['README.md','LICENSE','.env con contraseñas'], c:2},
+  {p:'7. En un conflicto, <code>&lt;&lt;&lt;&lt;&lt;&lt;&lt; HEAD</code> indica…',
+   o:['La versión de tu rama actual','La versión de la rama que llega','Un error de sintaxis'], c:0},
+  {p:'8. Tras resolver un conflicto, ¿qué comando es obligatorio?',
+   o:['<code>git add</code> sobre el archivo','<code>git push</code>','<code>git reset</code>'], c:0},
+  {p:'9. Quieres deshacer un commit ya subido a <code>main</code>. ¿Qué es seguro?',
+   o:['<code>git reset --hard</code>','<code>git revert</code>','Borrar el archivo a mano'], c:1},
+  {p:'10. ¿Cuál es la diferencia entre <code>git fetch</code> y <code>git pull</code>?',
+   o:['<code>fetch</code> solo descarga; <code>pull</code> también integra','Son idénticos','<code>pull</code> solo descarga; <code>fetch</code> sube'], c:0}
+];
+
+let respuestas = {};
+
+function render(){
+  const cont = document.getElementById('contenedor');
+  cont.innerHTML = PREGUNTAS.map((q,i)=>
+    '<div class="card" style="margin:12px 0"><h3>'+q.p+'</h3><div>'+
+      q.o.map((o,j)=>'<button data-i="'+i+'" data-c="'+(j===q.c?1:0)+'" onclick="elegir(this)" style="display:block;margin:6px 0;text-align:left">'+o+'</button>').join('')+
+    '</div></div>'
+  ).join('');
 }
+
+function elegir(btn){
+  const i = btn.dataset.i;
+  document.querySelectorAll('button[data-i="'+i+'"]').forEach(b=>{
+    b.style.background='#fff'; b.style.borderColor='#4361ee';
+  });
+  btn.style.background='#4361ee'; btn.style.color='#fff';
+  respuestas[i] = btn.dataset.c === '1';
+  const n = Object.keys(respuestas).length;
+  document.getElementById('avance').textContent = 'Respondidas: '+n+' de 10';
+  document.getElementById('barra').value = n;
+}
+
+function entregar(){
+  const n = Object.keys(respuestas).length;
+  const res = document.getElementById('res');
+  if(n < 10){ res.innerHTML = '⚠️ Has respondido '+n+' de 10. Completa todas antes de entregar.'; return; }
+  let score = 0;
+  PREGUNTAS.forEach((q,i)=>{ if(respuestas[i]) score++; });
+  const pct = Math.round(score/PREGUNTAS.length*100);
+  setFinalEval(score, pct);
+
+  if(pct >= 60){
+    res.innerHTML = '🎉 <b>¡Aprobaste!</b> '+score+' de 10 ('+pct+'%). Tu resultado se guardó. <a href="resultados.html">Ver resultados →</a>';
+  } else {
+    res.innerHTML = '📖 <b>Casi.</b> '+score+' de 10 ('+pct+'%). Repasa las lecciones y vuelve a intentarlo. <a href="index.html">Volver al inicio →</a>';
+  }
+}
+
+function reiniciar(){
+  respuestas = {};
+  render();
+  document.getElementById('res').textContent = '';
+  document.getElementById('avance').textContent = 'Respondidas: 0 de 10';
+  document.getElementById('barra').value = 0;
+}
+
+render();
 </script>
-</main><footer>OVA educativo — Carlos Ceballos · 2026</footer>
-</div></body></html>
+</body></html>

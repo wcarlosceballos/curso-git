@@ -1,12 +1,129 @@
-<!DOCTYPE html><html lang="es"><head><meta charset="UTF-8"><title>📗 Módulo 2 — Ramas y merge</title><link rel="stylesheet" href="../css/style.css"></head>
-<body><aside class="sidebar"><h2>📘 Git</h2><a href="../index.html">🏠 Inicio</a><a href="../diagnostico.html">🩺 Diagnóstico</a><a href="../modulo1/index.html">📘 Módulo 1</a><a href="../modulo2/index.html">📗 Módulo 2</a><a href="../modulo3/index.html">📘 Módulo 3</a></aside>
-<div class="main"><header><h1>📗 Módulo 2 — Ramas y merge</h1></header><main>
-<h2>🎯 Competencia</h2><p>Crear y unir ramas para trabajo paralelo</p>
-<div class="card"><h3>🎬 Actividad rápida</h3><p>¿Qué comando une dos ramas?</p><button onclick="a(this)">git clone</button><button data-ok="1" onclick="a(this)">git merge</button><button onclick="a(this)">git status</button><p id="f"></p></div>
-<a class="btn" href="reto.html">🏆 Ir al reto</a>
-<button class="btn" onclick="setModuleDone(2); alert('Módulo 2 completado');">✅ Marcar completado</button>
+<!DOCTYPE html><html lang="es"><head><meta charset="UTF-8"><title>📗 Módulo 2 — Ramas y Conflictos</title><link rel="stylesheet" href="../css/style.css"></head>
+<body><aside class="sidebar"><h2>📘 Git desde Cero</h2>
+<a href="../index.html">🏠 Inicio</a>
+<a href="../diagnostico.html">🩺 Diagnóstico</a>
+<a href="../leccion1.html">📗 Lección 1</a>
+<a href="../leccion2.html">📗 Lección 2</a>
+<a href="../leccion3.html">📗 Lección 3</a>
+<a href="../modulo1/index.html">📘 Módulo 1</a>
+<a href="index.html">📗 Módulo 2</a>
+<a href="../modulo3/index.html">📘 Módulo 3</a>
+<a href="../evaluacion.html">📝 Evaluación</a>
+<a href="../portafolio.html">📂 Portafolio</a>
+<a href="../resultados.html">🏆 Resultados</a>
+</aside>
+<div class="main"><header><h1>📗 Módulo 2 — Ramas, Merge y Conflictos</h1></header><main>
+
+<h2>🎯 Competencia</h2>
+<p>Trabajar con seguridad en paralelo, integrar cambios y resolver conflictos sin perder trabajo.</p>
+
+<div class="card"><h3>📖 Antes de empezar</h3>
+<p>Este módulo cubre lo que más cuesta de Git. Léelo antes de las actividades:</p>
+<a class="btn" href="../leccion2.html">📗 Abrir Lección 2 — Ramas y conflictos</a></div>
+
+<h2>🧠 Actividad 1 — Detecta el conflicto</h2>
+<p>Este bloque <b>es</b> un conflicto de Git. Léelo y responde:</p>
+<pre style="text-align:left">&lt;&lt;&lt;&lt;&lt;&lt;&lt; HEAD
+Bienvenido a mi proyecto
+=======
+Hola, bienvenido a MI proyecto
+&gt;&gt;&gt;&gt;&gt;&gt;&gt; feature/titulo</pre>
+<div class="card quiz">
+<p><b>1.</b> <code>HEAD</code> representa…</p>
+<button data-ok="1" onclick="r1(this,1)">La versión de tu rama actual</button>
+<button onclick="r1(this,0)">La versión de la rama que se integra</button>
+<button onclick="r1(this,0)">La última versión publicada</button>
+<p id="r1f"></p>
+
+<p><b>2.</b> Ya decidiste el texto final y borraste las marcas. ¿Qué falta?</p>
+<button onclick="r2(this,0)"><code>git status</code></button>
+<button data-ok="1" onclick="r2(this,1)"><code>git add archivo</code> para marcarlo resuelto</button>
+<button onclick="r2(this,0)"><code>git push</code></button>
+<p id="r2f"></p>
+</div>
+
+<h2>🧠 Actividad 2 — ¿Habrá conflicto?</h2>
+<p>Git <b>no</b> da conflicto siempre. Piensa antes de responder:</p>
+<div class="card quiz">
+<p><b>3.</b> Rama A edita <code>README.md</code>. Rama B edita <code>app.js</code>. ¿Conflicto?</p>
+<button data-ok="1" onclick="r3(this,1)">No — archivos distintos</button>
+<button onclick="r3(this,0)">Sí — siempre hay conflicto al hacer merge</button>
+<p id="r3f"></p>
+
+<p><b>4.</b> Ambas ramas editan la <b>misma línea</b> del mismo archivo, con textos distintos. ¿Conflicto?</p>
+<button onclick="r4(this,0)">No — Git elige la versión más reciente</button>
+<button data-ok="1" onclick="r4(this,1)">Sí — Git no puede decidir cuál es correcto</button>
+<p id="r4f"></p>
+</div>
+<p id="puntaje" style="font-weight:bold;font-size:1.1em"></p>
+
+<h2>⚠️ Actividad 3 — Elige el comando seguro</h2>
+<div class="card">
+<p>Acabas de subir un commit con un error a <code>main</code>, que es compartido. ¿Qué haces?</p>
+<div class="quiz">
+<button data-ok="1" onclick="elige(this)"><code>git revert a1b2c3d</code></button>
+<button onclick="elige(this)"><code>git reset --hard a1b2c3d</code></button>
+<button onclick="elige(this)">Borrar el archivo y hacer push</button>
+<button onclick="elige(this)">Nada, dejarlo así</button>
+</div>
+<p id="seguridad"></p>
+</div>
+
+<h2>✍️ Actividad 4 — Tu flujo de trabajo</h2>
+<div class="card">
+<p>Escribe, <b>en orden</b>, los comandos que usarías para crear una rama, trabajar en ella y volver a <code>main</code>. Uno por línea.</p>
+<label><b>Tu secuencia de comandos:</b><br>
+<textarea id="flujo" rows="6" style="width:100%" placeholder="git switch -c feature/x&#10;git add .&#10;git commit -m &quot;...&quot;&#10;git switch main&#10;git merge feature/x"></textarea></label><br>
+<button class="btn" onclick="evaluarFlujo()">Revisar mi flujo</button>
+<p id="fbflujo"></p>
+</div>
+
+<a class="btn" href="reto.html">🏆 Ir al reto del módulo</a>
+<button class="btn" onclick="completar(this)">✅ Marcar módulo completado</button>
+
 </main><footer>OVA educativo — Carlos Ceballos · 2026</footer></div>
 <script src="../js/storage.js"></script>
+<script src="../js/progress.js"></script>
 <script>
-function a(b){document.getElementById('f').textContent=b.hasAttribute('data-ok')?'✅ Correcto':'❌ Prueba otra vez'; if(b.hasAttribute('data-ok')) b.dataset.done='1';}
-</script></body></html>
+function responder(id,c){
+  var el=document.getElementById(id);
+  el.textContent=c?'✅ Correcto':'❌ No es esa — revisa la lección';
+  el.style.color=c?'#22c55e':'#ef4444';
+  recalcular();
+}
+function r1(b,c){responder('r1f',c===1)} function r2(b,c){responder('r2f',c===1)}
+function r3(b,c){responder('r3f',c===1)} function r4(b,c){responder('r4f',c===1)}
+function correcta(id){var e=document.getElementById(id);return e.textContent.indexOf('Correcto')>-1}
+function recalcular(){
+  var n=0;['r1f','r2f','r3f','r4f'].forEach(function(id){if(correcta(id))n++});
+  var et=['❌ 0 de 4','⚠️ 1 de 4','⚠️ 2 de 4','⚠️ 3 de 4','✅ 4 de 4 — perfecto'];
+  document.getElementById('puntaje').textContent=et[n];
+  return n;
+}
+function elige(b){
+  var ok=b.hasAttribute('data-ok');
+  document.getElementById('seguridad').innerHTML = ok
+    ? '✅ Correcto. <code>git revert</code> <b>crea un commit nuevo</b> que deshace el anterior: el historial queda intacto y nadie pierde trabajo. <code>reset --hard</code> habría borrado el commit para todos.'
+    : '❌ Cuidado. En un repositorio compartido nunca uses <code>reset --hard</code> sobre <code>main</code>: borra commits de forma definitiva. La opción segura es <code>git revert</code>.';
+  b.style.background= ok?'#dcfce7':'#fee2e2';
+}
+function evaluarFlujo(){
+  var v=document.getElementById('flujo').value, fb=document.getElementById('fbflujo');
+  if(v.trim().length<30){ fb.innerHTML='⚠️ Escribe tu secuencia completa.'; return; }
+  var pasos=[
+    {re:/switch\s+-c|checkout\s+-b/, t:'crear la rama'},
+    {re:/add\b/,               t:'preparar los cambios'},
+    {re:/commit/,              t:'confirmar'},
+    {re:/switch\s+main|checkout\s+main/, t:'volver a main'},
+    {re:/merge/,               t:'integrar la rama'}
+  ];
+  var faltan=pasos.filter(function(p){return !p.re.test(v)}).map(function(p){return p.t});
+  if(!faltan.length) fb.innerHTML='✅ <b>Flujo completo y en orden correcto.</b> Eso es exactamente el flujo de la lección.';
+  else fb.innerHTML='⚠️ Tu flujo no incluye: <b>'+faltan.join('</b>, <b>')+'</b>. Revisa el paso a paso de la Lección 2.';
+}
+function completar(btn){
+  setModuleDone(2);
+  btn.textContent='✅ Módulo 2 completado'; btn.disabled=true;
+}
+</script>
+</body></html>

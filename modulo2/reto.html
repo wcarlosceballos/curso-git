@@ -1,11 +1,109 @@
-<!DOCTYPE html><html lang="es"><head><meta charset="UTF-8"><link rel="stylesheet" href="../css/style.css"></head><body>
-<aside class="sidebar"><h2>📘 Git</h2><a href="../index.html">🏠 Inicio</a><a href="../diagnostico.html">🩺 Diagnóstico</a><a href="index.html">📘 Volver al módulo</a></aside>
-<div class="main"><header><h1>🏆 Reto</h1></header><main>
-<div class="card"><p>📝 Describe con tus palabras lo aprendido en este módulo y guárdalo.</p>
-<textarea id="x" rows="6" style="width:100%"></textarea><br><br>
-<button class="btn" onclick="guardar()">Guardar evidencia</button><p id="fb"></p></div>
+<!DOCTYPE html><html lang="es"><head><meta charset="UTF-8"><title>🏆 Reto Módulo 2 — Ramas y Conflictos</title>
+<link rel="stylesheet" href="../css/style.css"></head><body>
+<aside class="sidebar"><h2>📘 Git</h2><a href="../index.html">🏠 Inicio</a><a href="../diagnostico.html">🩺 Diagnóstico</a><a href="index.html">📗 Volver al módulo</a></aside>
+<div class="main"><header><h1>🏆 Reto del Módulo 2 — Ramas y Conflictos</h1></header><main>
+
+<h2>🎯 Misión</h2>
+<p>Demuestra que sabes integrar ramas y, sobre todo, <b>resolver un conflicto real</b>. Esta es la habilidad que más se necesita en un trabajo.</p>
+
+<h2>📝 Parte 1 — Preguntas</h2>
+<div class="card quiz">
+  <p><b>1.</b> En un archivo con conflicto, <code>&lt;&lt;&lt;&lt;&lt;&lt;&lt; HEAD</code> indica…</p>
+  <button data-ok="1" onclick="r1(this,1)">La versión de tu rama actual</button>
+  <button onclick="r1(this,0)">La versión de la rama que se integra</button>
+  <button onclick="r1(this,0)">Un error de sintaxis</button>
+  <p id="r1f"></p>
+</div>
+
+<div class="card quiz">
+  <p><b>2.</b> Ya borraste las marcas del conflicto. ¿Qué comando es <b>obligatorio</b> para confirmar que quedó resuelto?</p>
+  <button onclick="r2(this,0)"><code>git status</code></button>
+  <button data-ok="1" onclick="r2(this,1)"><code>git add archivo.txt</code></button>
+  <button onclick="r2(this,0)"><code>git push</code></button>
+  <p id="r2f"></p>
+</div>
+
+<div class="card quiz">
+  <p><b>3.</b> Quieres deshacer un commit que <b>ya subiste</b> al repositorio compartido. ¿Cuál es la opción segura?</p>
+  <button onclick="r3(this,0)"><code>git reset --hard</code></button>
+  <button data-ok="1" onclick="r3(this,1)"><code>git revert &lt;hash&gt;</code></button>
+  <button onclick="r3(this,0)">Borrar el archivo a mano</button>
+  <p id="r3f"></p>
+</div>
+
+<div class="card quiz">
+  <p><b>4.</b> ¿En qué situación <b>no</b> ocurre un conflicto?</p>
+  <button onclick="r4(this,0)">Dos ramas cambian la misma línea</button>
+  <button data-ok="1" onclick="r4(this,1)">Dos ramas cambian archivos distintos</button>
+  <button onclick="r4(this,0)">Dos ramas cambian el mismo archivo</button>
+  <p id="r4f"></p>
+</div>
+
+<p id="puntaje" style="font-weight:bold;font-size:1.1em"></p>
+
+<h2>🧪 Parte 2 — Evidencia práctica</h2>
+<div class="card">
+  <p><b>Tarea: provoca y resuelve un conflicto de verdad.</b></p>
+  <ol>
+    <li>Crea la rama <code>feature/titulo</code> y cambia la primera línea del <code>README.md</code></li>
+    <li>Vuelve a <code>main</code> y cambia <b>la misma línea</b> de otra forma</li>
+    <li>Ejecuta <code>git merge feature/titulo</code> →(conflicto)</li>
+    <li>Pega abajo el bloque con las marcas <code>&lt;&lt;&lt;&lt;&lt;&lt;&lt;</code> que te mostró</li>
+    <li>Resuélvelo, borra todas las marcas y commitea</li>
+  </ol>
+  <label><b>Pega el conflicto tal como apareció:</b><br>
+  <textarea id="conflicto" rows="7" style="width:100%" placeholder="&lt;&lt;&lt;&lt;&lt;&lt;&lt; HEAD&#10;Bienvenido a mi proyecto&#10;=======&#10;Hola, bienvenido a MI proyecto&#10;&gt;&gt;&gt;&gt;&gt;&gt;&gt; feature/titulo"></textarea></label><br>
+  <label><b>¿Cómo lo resolviste y por qué?</b><br>
+  <textarea id="resolucion" rows="4" style="width:100%" placeholder="Me quedé con la versión de feature/titulo porque…"></textarea></label><br>
+  <button class="btn" onclick="guardar()">Guardar evidencia</button>
+  <p id="fb"></p>
+</div>
+
+<details><summary>💡 Ver pistas</summary>
+<p>Las tres marcas son <code>&lt;&lt;&lt;&lt;&lt;&lt;&lt;</code> (tu rama), <code>=======</code> (separador) y <code>&gt;&gt;&gt;&gt;&gt;&gt;&gt;</code> (la rama que llega).</p>
+<p>Si después de editar Git sigue diciendo que hay conflicto, es que <b>quedó una marca sin borrar</b> o <b>faltó el <code>git add</code></b>.</p>
+<p>En repositorio compartido, <b>nunca</b> uses <code>reset --hard</code> sobre <code>main</code>: borra commits para todos.</p>
+</details>
+
 </main><footer>OVA educativo — Carlos Ceballos · 2026</footer></div>
+
 <script src="../js/storage.js"></script>
+<script src="../js/progress.js"></script>
 <script>
-function guardar(){saveProgress(Object.assign(getProgress(),{reto193,tarea:x.value}));document.getElementById('fb').textContent='✅ Guardado en tu portafolio';}
-</script></body></html>
+function responder(id,correcto){
+  var el=document.getElementById(id);
+  el.textContent=correcto?'✅ Correcto':'❌ Revisa la lección e intenta otra vez';
+  el.style.color=correcto?'#22c55e':'#ef4444';
+  recalcular();
+}
+function r1(b,c){ responder('r1f',c===1); }
+function r2(b,c){ responder('r2f',c===1); }
+function r3(b,c){ responder('r3f',c===1); }
+function r4(b,c){ responder('r4f',c===1); }
+
+function correcta(id){ var el=document.getElementById(id); return el.textContent.indexOf('Correcto')>-1; }
+
+function recalcular(){
+  var n=0;
+  if(correcta('r1f'))n++; if(correcta('r2f'))n++; if(correcta('r3f'))n++; if(correcta('r4f'))n++;
+  var etiq=['❌ 0 de 4','⚠️ 1 de 4','⚠️ 2 de 4','⚠️ 3 de 4','✅ 4 de 4 — perfecto'];
+  document.getElementById('puntaje').textContent = etiq[n];
+  return n;
+}
+
+function guardar(){
+  var cf=document.getElementById('conflicto').value;
+  var rs=document.getElementById('resolucion').value.trim();
+  var fb=document.getElementById('fb');
+
+  if(cf.indexOf('<<<<<<<')<0){ fb.innerHTML='⚠️ El texto debe incluir la marca <code>&lt;&lt;&lt;&lt;&lt;&lt;&lt; HEAD</code> del conflicto.'; return; }
+  if(rs.length<20){ fb.innerHTML='⚠️ Explica cómo lo resolviste y por qué (mínimo unas palabras).'; return; }
+
+  var n=recalcular();
+  savePortfolio('reto2_conflicto', cf);
+  savePortfolio('reto2_resolucion', rs);
+  setModuleScore(2, n*25);
+  fb.innerHTML='✅ Evidencia guardada. ¡Resolver conflictos es la habilidad clave! Puntaje del quiz: '+n+'/4.';
+}
+</script>
+</body></html>
