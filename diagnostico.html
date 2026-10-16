@@ -1,0 +1,49 @@
+<!DOCTYPE html><html lang="es"><head><meta charset="UTF-8"><title>🩺 Diagnóstico</title>
+<link rel="stylesheet" href="css/style.css"></head>
+<body><aside class="sidebar">
+<h2>📘 Git</h2>
+<a href="index.html">🏠 Inicio</a>
+<a href="diagnostico.html">🩺 Diagnóstico</a>
+<a href="modulo1/index.html">📘 Módulo 1</a>
+<a href="modulo2/index.html">📗 Módulo 2</a>
+<a href="modulo3/index.html">📘 Módulo 3</a>
+</aside>
+<div class="main"><header><h1>🩺 Evaluación diagnóstica</h1></header>
+<main>
+<p>No genera nota. Determina tu nivel inicial y recomienda una ruta.</p>
+<div id="quiz"></div>
+<button class="btn" onclick="enviar()">Finalizar diagnóstico</button>
+<p id="resultado"></p>
+</main>
+<footer>OVA educativo — Carlos Ceballos · 2026</footer></div>
+<script src="js/storage.js"></script>
+<script>
+const preguntas = [
+ {p:'1. ¿Qué hace git init?', o:['Crea una rama','Inicializa un repositorio','Sube cambios a GitHub'], c:1},
+ {p:'2. ¿Qué comando guarda un cambio en el historial?', o:['git push','git commit','git clone'], c:1},
+ {p:'3. ¿Qué es una rama?', o:['Una carpeta','Una línea de trabajo paralela','Un servidor'], c:1},
+ {p:'4. ¿Qué sube cambios al remoto?', o:['git pull','git push','git add'], c:1},
+ {p:'5. ¿Qué hace git merge?', o:['Une ramas','Borra archivos','Crea repo'], c:0},
+ {p:'6. ¿Qué comando muestra el estado de los archivos?', o:['git status','git log','git remote'], c:0},
+ {p:'7. ¿Qué es staging area?', o:['La nube','Zona de preparación antes de commit','El navegador'], c:1},
+ {p:'8. ¿GitHub es?', o:['Un IDE','Un servicio de hosting de repos','Un lenguaje'], c:1},
+];let sel = {};
+function render(){
+  let h='';
+  preguntas.forEach((q,i)=>{
+    h+=`<div class="card"><p><b>${q.p}</b></p>`;
+    q.o.forEach((op,j)=>{ h+=`<label style="display:block;margin:6px 0"><input type="radio" name="q${i}" value="${j}" onchange="sel[${i}]=${j}"> ${op}</label>` });
+    h+='</div>';
+  });
+  document.getElementById('quiz').innerHTML=h;
+}
+function enviar(){
+  let pts=0;
+  preguntas.forEach((q,i)=>{ if(sel[i]===q.c) pts++; });
+  let nivel = pts<=2 ? 'Explorador' : pts<=4 ? 'Practicante' : pts<=6 ? 'Desarrollador asistido' : 'Arquitecto de IA';
+  const p = getProgress(); p.diagnostico = nivel; p.puntosDiagnostico = pts; saveProgress(p);
+  document.getElementById('resultado').innerHTML = `<h3>🎉 Tu punto de partida</h3><p>Nivel: <b>${nivel}</b> (${pts}/8)</p><p>Recomendación: comienza con el Módulo 1 y avanza por la ruta.</p><a class="btn" href="modulo1/index.html">Ir al Módulo 1</a>`;
+}
+render();
+</script>
+</body></html>

@@ -1,0 +1,28 @@
+<!DOCTYPE html><html lang="es"><head><meta charset="UTF-8"><title>Lección 2</title><link rel="stylesheet" href="css/style.css"></head>
+<body><aside class="sidebar">
+<h2>📘 Git desde Cero</h2>
+<a href="index.html">🏠 Inicio</a>
+<a href="leccion1.html">📗 Lección 1</a>
+<a href="leccion2.html">📗 Lección 2</a>
+<a href="leccion3.html">📗 Lección 3</a>
+<a href="evaluacion.html">📝 Evaluación</a>
+</aside>
+<div class="main">
+<header><h1>📗 Lección 2 — Ramas y Merge</h1></header>
+<main>
+<h2>¿Qué es una rama?</h2><p>Una <b>línea de trabajo paralela</b> sin tocar <code>main</code>.</p>
+<h2>Comandos</h2>
+<table><tr><th>Comando</th><th>Qué hace</th></tr>
+<tr><td><code>git branch</code></td><td>Ver ramas</td></tr>
+<tr><td><code>git checkout -b mi-rama</code></td><td>Crear y cambiar</td></tr>
+<tr><td><code>git checkout main</code></td><td>Volver a main</td></tr>
+<tr><td><code>git merge mi-rama</code></td><td>Unir cambios</td></tr></table>
+<h2>Flujo típico</h2>
+<pre>git checkout -b mejorar-readme
+# editas README.md
+git add README.md
+git commit -m "Mejorar README"
+git checkout main
+git merge mejorar-readme</pre>
+</main><footer>OVA educativo — Carlos Ceballos · 2026</footer>
+</div></body></html>

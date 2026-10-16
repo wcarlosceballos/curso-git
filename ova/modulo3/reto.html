@@ -1,0 +1,11 @@
+<!DOCTYPE html><html lang="es"><head><meta charset="UTF-8"><link rel="stylesheet" href="../css/style.css"></head><body>
+<aside class="sidebar"><h2>📘 Git</h2><a href="../index.html">🏠 Inicio</a><a href="../diagnostico.html">🩺 Diagnóstico</a><a href="index.html">📘 Volver al módulo</a></aside>
+<div class="main"><header><h1>🏆 Reto</h1></header><main>
+<div class="card"><p>📝 Describe con tus palabras lo aprendido en este módulo y guárdalo.</p>
+<textarea id="x" rows="6" style="width:100%"></textarea><br><br>
+<button class="btn" onclick="guardar()">Guardar evidencia</button><p id="fb"></p></div>
+</main><footer>OVA educativo — Carlos Ceballos · 2026</footer></div>
+<script src="../js/storage.js"></script>
+<script>
+function guardar(){saveProgress(Object.assign(getProgress(),{reto198,tarea:x.value}));document.getElementById('fb').textContent='✅ Guardado en tu portafolio';}
+</script></body></html>
