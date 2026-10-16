@@ -1,11 +1,112 @@
-<!DOCTYPE html><html lang="es"><head><meta charset="UTF-8"><link rel="stylesheet" href="../css/style.css"></head><body>
+<!DOCTYPE html><html lang="es"><head><meta charset="UTF-8"><title>🏆 Reto Módulo 3 — GitHub</title>
+<link rel="stylesheet" href="../css/style.css"></head><body>
 <aside class="sidebar"><h2>📘 Git</h2><a href="../index.html">🏠 Inicio</a><a href="../diagnostico.html">🩺 Diagnóstico</a><a href="index.html">📘 Volver al módulo</a></aside>
-<div class="main"><header><h1>🏆 Reto</h1></header><main>
-<div class="card"><p>📝 Describe con tus palabras lo aprendido en este módulo y guárdalo.</p>
-<textarea id="x" rows="6" style="width:100%"></textarea><br><br>
-<button class="btn" onclick="guardar()">Guardar evidencia</button><p id="fb"></p></div>
+<div class="main"><header><h1>🏆 Reto del Módulo 3 — GitHub</h1></header><main>
+
+<h2>🎯 Misión</h2>
+<p>Demuestra que puedes <b>publicar un proyecto limpio</b> en GitHub y que entiendes cómo se trabaja con otras personas.</p>
+
+<h2>📝 Parte 1 — Preguntas</h2>
+<div class="card quiz">
+  <p><b>1.</b> ¿Qué hace <code>git fetch</code>?</p>
+  <button onclick="r1(this,0)">Integra los cambios en tu rama</button>
+  <button data-ok="1" onclick="r1(this,1)">Descarga los cambios sin integrarlos</button>
+  <button onclick="r1(this,0)">Sube tus commits al remoto</button>
+  <p id="r1f"></p>
+</div>
+
+<div class="card quiz">
+  <p><b>2.</b> Te pide contraseña al hacer <code>push</code> por HTTPS. ¿Qué pones en el campo <b>contraseña</b>?</p>
+  <button onclick="r2(this,0)">Tu contraseña normal de GitHub</button>
+  <button data-ok="1" onclick="r2(this,1)">Tu token personal (PAT)</button>
+  <button onclick="r2(this,0)">La clave SSH</button>
+  <p id="r2f"></p>
+</div>
+
+<div class="card quiz">
+  <p><b>3.</b> Quieres contribuir a un proyecto de otra persona. ¿Cuál es el flujo correcto?</p>
+  <button onclick="r3(this,0)">Clone → editar → push</button>
+  <button data-ok="1" onclick="r3(this,1)">Fork → clone → push a tu fork → Pull Request</button>
+  <button onclick="r3(this,0)">Solicitar que te den permisos primero</button>
+  <p id="r3f"></p>
+</div>
+
+<div class="card quiz">
+  <p><b>4.</b> ¿Para qué sirve el <code>-u</code> de <code>git push -u origin main</code>?</p>
+  <button onclick="r4(this,0)">Subir los archivos que faltan</button>
+  <button data-ok="1" onclick="r4(this,1)">Vincular la rama con el remoto para siempre</button>
+  <button onclick="r4(this,0)">Forzar la subida aunque haya conflictos</button>
+  <p id="r4f"></p>
+</div>
+
+<p id="puntaje" style="font-weight:bold;font-size:1.1em"></p>
+
+<h2>🧪 Parte 2 — Evidencia práctica</h2>
+<div class="card">
+  <p><b>Tarea: publica un repositorio.</b></p>
+  <ol>
+    <li>Crea un repositorio nuevo en tu cuenta de GitHub</li>
+    <li>Clónalo y añade un <code>README.md</code> con título y descripción</li>
+    <li>Haz al menos 2 commits</li>
+    <li>Pega abajo la salida de <code>git remote -v</code></li>
+  </ol>
+  <label><b>URL de tu repositorio en GitHub:</b><br>
+  <input id="url" type="text" style="width:100%;padding:10px;border:1px solid #e2e8f0;border-radius:8px" placeholder="https://github.com/TU_USUARIO/mi-primer-repo"></label><br><br>
+  <label><b>Salida de <code>git remote -v</code>:</b><br>
+  <textarea id="remoto" rows="4" style="width:100%" placeholder="origin  https://github.com/TU_USUARIO/mi-primer-repo.git (fetch)&#10;origin  https://github.com/TU_USUARIO/mi-primer-repo.git (push)"></textarea></label><br>
+  <label><b>Salida de <code>git log --oneline</code>:</b><br>
+  <textarea id="log" rows="4" style="width:100%" placeholder="a1b2c3d feat: README inicial&#10;e4f5g6h chore: estructura inicial"></textarea></label><br>
+  <button class="btn" onclick="guardar()">Guardar evidencia</button>
+  <p id="fb"></p>
+</div>
+
+<details><summary>💡 Ver pistas</summary>
+<p>Si <code>git push</code> dice <i>rejected</i>, casi siempre es porque hiciste <code>git pull</code> después del último push. Ejecuta <code>git pull</code> y vuelve a subir.</p>
+<p>El PAT se genera en <b>Settings → Developer settings → Personal access tokens</b> con permiso <code>repo</code>. Si se filtra, revócalo.</p>
+<p>Con SSH evitas escribir credenciales: <code>git@github.com:TU_USUARIO/REPO.git</code>.</p>
+</details>
+
 </main><footer>OVA educativo — Carlos Ceballos · 2026</footer></div>
+
 <script src="../js/storage.js"></script>
 <script>
-function guardar(){saveProgress(Object.assign(getProgress(),{reto198,tarea:x.value}));document.getElementById('fb').textContent='✅ Guardado en tu portafolio';}
-</script></body></html>
+function responder(id,correcto){
+  var el=document.getElementById(id);
+  el.textContent=correcto?'✅ Correcto':'❌ Revisa la lección e intenta otra vez';
+  el.style.color=correcto?'#22c55e':'#ef4444';
+  recalcular();
+}
+function r1(b,c){ responder('r1f',c===1); }
+function r2(b,c){ responder('r2f',c===1); }
+function r3(b,c){ responder('r3f',c===1); }
+function r4(b,c){ responder('r4f',c===1); }
+
+function correcta(id){ var el=document.getElementById(id); return el.textContent.indexOf('Correcto')>-1; }
+
+function recalcular(){
+  var n=0;
+  if(correcta('r1f'))n++; if(correcta('r2f'))n++; if(correcta('r3f'))n++; if(correcta('r4f'))n++;
+  var etiq=['❌ 0 de 4','⚠️ 1 de 4','⚠️ 2 de 4','⚠️ 3 de 4','✅ 4 de 4 — perfecto'];
+  document.getElementById('puntaje').textContent = etiq[n];
+  return n;
+}
+
+function guardar(){
+  var url=document.getElementById('url').value.trim();
+  var rm=document.getElementById('remoto').value.trim();
+  var lg=document.getElementById('log').value.trim();
+  var fb=document.getElementById('fb');
+
+  if(url.indexOf('github.com')<0){ fb.innerHTML='⚠️ Pega la URL completa de tu repositorio en GitHub.'; return; }
+  if(rm.indexOf('origin')<0){ fb.innerHTML='⚠️ Debe aparecer la línea <code>origin … (fetch)</code> de <code>git remote -v</code>.'; return; }
+  if(lg.length<15){ fb.innerHTML='⚠️ Pega la salida de <code>git log --oneline</code>.'; return; }
+
+  var n=recalcular();
+  savePortfolio('reto3_url', url);
+  savePortfolio('reto3_remoto', rm);
+  savePortfolio('reto3_log', lg);
+  setModuleScore(3, n*25);
+  fb.innerHTML='✅ Evidencia guardada. ¡Ya publicaste tu primer repositorio! Puntaje del quiz: '+n+'/4.';
+}
+</script>
+</body></html>

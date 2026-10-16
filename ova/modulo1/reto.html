@@ -1,11 +1,107 @@
-<!DOCTYPE html><html lang="es"><head><meta charset="UTF-8"><link rel="stylesheet" href="../css/style.css"></head><body>
+<!DOCTYPE html><html lang="es"><head><meta charset="UTF-8"><title>🏆 Reto Módulo 1 — Git Básico</title>
+<link rel="stylesheet" href="../css/style.css"></head><body>
 <aside class="sidebar"><h2>📘 Git</h2><a href="../index.html">🏠 Inicio</a><a href="../diagnostico.html">🩺 Diagnóstico</a><a href="index.html">📘 Volver al módulo</a></aside>
-<div class="main"><header><h1>🏆 Reto</h1></header><main>
-<div class="card"><p>📝 Describe con tus palabras lo aprendido en este módulo y guárdalo.</p>
-<textarea id="x" rows="6" style="width:100%"></textarea><br><br>
-<button class="btn" onclick="guardar()">Guardar evidencia</button><p id="fb"></p></div>
+<div class="main"><header><h1>🏆 Reto del Módulo 1 — Git Básico</h1></header><main>
+
+<h2>🎯 Misión</h2>
+<p>Demuestra que controlas el flujo de las <b>3 áreas</b> y que sabes proteger tu proyecto antes de publicarlo.</p>
+
+<h2>📝 Parte 1 — Preguntas</h2>
+<div class="card quiz">
+  <p><b>1.</b> ¿Qué hace exactamente <code>git add archivo.txt</code>?</p>
+  <button onclick="r1(this,0)">Guarda el archivo en el historial</button>
+  <button data-ok="1" onclick="r1(this,1)">Lo prepara en el staging area</button>
+  <button onclick="r1(this,0)">Lo sube a GitHub</button>
+  <p id="r1f"></p>
+</div>
+
+<div class="card quiz">
+  <p><b>2.</b> ¿En qué área haces los cambios normalmente, antes de preparar nada?</p>
+  <button data-ok="1" onclick="r2(this,1)">Working directory</button>
+  <button onclick="r2(this,0)">Staging area</button>
+  <button onclick="r2(this,0)">Repository</button>
+  <p id="r2f"></p>
+</div>
+
+<div class="card quiz">
+  <p><b>3.</b> ¿Cuál de estos archivos <b>nunca</b> debería subirse a GitHub?</p>
+  <button onclick="r3(this,0)">README.md</button>
+  <button data-ok="1" onclick="r3(this,1)">.env (con contraseñas)</button>
+  <button onclick="r3(this,0)">LICENSE</button>
+  <p id="r3f"></p>
+</div>
+
+<div class="card quiz">
+  <p><b>4.</b> ¿Cuál es el orden correcto?</p>
+  <button onclick="r4(this,0)">commit → add → push</button>
+  <button data-ok="1" onclick="r4(this,1)">add → commit → push</button>
+  <button onclick="r4(this,0)">push → add → commit</button>
+  <p id="r4f"></p>
+</div>
+
+<p id="puntaje" style="font-weight:bold;font-size:1.1em"></p>
+
+<h2>🧪 Parte 2 — Evidencia práctica</h2>
+<div class="card">
+  <p>Crea un repositorio de prueba y pega aquí la salida de tus comandos.</p>
+  <p><b>Tarea:</b></p>
+  <ol>
+    <li>Crea un <code>.gitignore</code> con <code>node_modules/</code> y <code>.env</code></li>
+    <li>Haz 2 commits con mensajes descriptivos</li>
+    <li>Pega el resultado de <code>git log --oneline</code></li>
+  </ol>
+  <label><b>Salida de <code>git log --oneline</code>:</b><br>
+  <textarea id="evidencia" rows="6" style="width:100%" placeholder="a1b2c3d feat: estructura inicial&#10;e4f5g6h docs:(readme inicial"></textarea></label><br>
+  <label><b>Tu <code>.gitignore</code>:</b><br>
+  <textarea id="gitignore" rows="3" style="width:100%" placeholder="node_modules/&#10;.env"></textarea></label><br>
+  <button class="btn" onclick="guardar()">Guardar evidencia</button>
+  <p id="fb"></p>
+</div>
+
+<details><summary>💡 Ver pistas</summary>
+<p>El orden del flujo es <b>Working → Staging → Repository</b>. <code>git add</code> elige, <code>git commit</code> confirma.</p>
+<p>Un buen mensaje dice <i>qué</i> cambiaste y <i>por qué</i>: <code>feat: agregar formulario de contacto</code>.</p>
+<p>Si tu <code>.env</code> ya se subió, bórralo de la caché y revoca el secreto. Por eso el <code>.gitignore</code> va <b>antes</b> del primer push.</p>
+</details>
+
 </main><footer>OVA educativo — Carlos Ceballos · 2026</footer></div>
+
 <script src="../js/storage.js"></script>
 <script>
-function guardar(){saveProgress(Object.assign(getProgress(),{reto218,tarea:x.value}));document.getElementById('fb').textContent='✅ Guardado en tu portafolio';}
-</script></body></html>
+function responder(id,correcto){
+  var el=document.getElementById(id);
+  el.textContent=correcto?'✅ Correcto':'❌ Revisa la lección e intenta otra vez';
+  if(correcto){ el.style.color='#22c55e'; } else { el.style.color='#ef4444'; }
+  recalcular();
+}
+function r1(b,c){ responder('r1f',c===1); }
+function r2(b,c){ responder('r2f',c===1); }
+function r3(b,c){ responder('r3f',c===1); }
+function r4(b,c){ responder('r4f',c===1); }
+
+function correcta(id){ var el=document.getElementById(id); return el.textContent.indexOf('Correcto')>-1; }
+
+function recalcular(){
+  var n=0;
+  if(correcta('r1f'))n++; if(correcta('r2f'))n++; if(correcta('r3f'))n++; if(correcta('r4f'))n++;
+  var etiq=['❌ 0 de 4','⚠️ 1 de 4','⚠️ 2 de 4','⚠️ 3 de 4','✅ 4 de 4 — perfecto'];
+  document.getElementById('puntaje').textContent = n<4 ? etiq[n] : etiq[4];
+  return n;
+}
+
+function guardar(){
+  var ev=document.getElementById('evidencia').value.trim();
+  var gi=document.getElementById('gitignore').value.trim();
+  var fb=document.getElementById('fb');
+
+  if(ev.length<15){ fb.innerHTML='⚠️ Pega la salida real de <code>git log --oneline</code>.'; return; }
+  if(gi.indexOf('.env')<0 && gi.indexOf('node_modules')<0){ fb.innerHTML='⚠️ Tu .gitignore debe mencionar <code>.env</code> o <code>node_modules/</code>.'; return; }
+
+  var n=recalcular();
+  savePortfolio('reto1_evidencia', ev);
+  savePortfolio('reto1_gitignore', gi);
+  setModuleScore(1, n*25);
+  fb.innerHTML='✅ Evidencia guardada en tu portafolio. Puntaje del quiz: '+n+'/4.';
+}
+</script>
+</body></html>
